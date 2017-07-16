@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016, Marcin Barylski
+# Copyright (c) 2016 - 2017, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -56,6 +56,7 @@ class Primes:
     set_prime = set ()
     set_nonprime = set ()
     list_sorted_prime = []
+    list_sorted_nonprime = []
 
     # Caching previous primality results
     #   o True  - auxilary sets of primes and composite numbers will grow
@@ -81,6 +82,12 @@ class Primes:
                     else:
                         self.add_to_nonprime_set(int(number))
 
+    def get_list_sorted_prime (self):
+        return list_sorted_prime
+
+    def get_list_sorted_nonprime (self):
+        return list_sorted_nonprime
+
     def is_in_prime_set (self, n):
         if n in self.set_prime:
             return True
@@ -93,11 +100,14 @@ class Primes:
         else:
             return False
 
-    def add_to_prime_set (self, n):
-        self.set_prime.add(n)
-
     def sort_prime_set (self):
         self.list_sorted_prime = sorted (self.set_prime)
+
+    def sort_nonprime_set (self):
+        self.list_nonsorted_prime = sorted (self.set_nonprime)
+
+    def add_to_prime_set (self, n):
+        self.set_prime.add(n)
 
     def add_to_nonprime_set (self, n):
         self.set_nonprime.add(n)
