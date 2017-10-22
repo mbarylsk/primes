@@ -171,4 +171,59 @@ class Primes:
     def get_ith_prime (self, i):
         return self.list_sorted_prime[i]
 
-    
+    def factorize (self, n):
+        if n <= 1:
+            return 0
+        i = 2
+        e = math.floor(math.sqrt(n))
+        f = []
+        while i <= e:
+            if n%i == 0:
+                f.append(i)
+                n /= i
+                e = math.floor(math.sqrt(n))
+            else:
+                i += 1
+        if n > 1:
+            f.append(int(n))
+        return f
+
+    def calculate_3a_2b (self, n):
+        done = False
+        a = int(n/3)
+        b = 1
+        while not done:
+            remainder = n - 3*a
+            b = int(remainder / 2)
+            if b < 1:
+                a -= 1
+            if a < 1:
+                break
+            if a >= 1 and b >= 1:
+                done = True
+                break
+        return (a, b)
+
+    def calculate_2a_3b (self, n):
+        done = False
+        a = int(n/2)
+        b = 1
+        while not done:
+            remainder = n - 2*a
+            b = int(remainder / 3)
+            if b < 1:
+                a -= 1
+            if a < 1:
+                break
+            if a >= 1 and b >= 1:
+                done = True
+                break
+        return (a, b)
+
+    def is_symmetric_prime (self, n, i):
+        k1 = n - i
+        k2 = n + i
+        if self.is_prime(k1) and self.is_prime (k2):
+            return (True, k1, k2)
+        else:
+            return (False, 0, 0)
