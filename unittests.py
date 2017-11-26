@@ -120,6 +120,22 @@ class TestMethods(unittest.TestCase):
         self.assertFalse(p.is_bigger_twin_prime(11))
         self.assertFalse(p.is_bigger_twin_prime(2))
         self.assertFalse(p.is_bigger_twin_prime(9))
+
+    def test_is_symmetric_prime(self):
+        p = primes.Primes(False)
+        self.assertEqual(p.is_symmetric_prime(3,0), (True, 3, 3))
+        self.assertEqual(p.is_symmetric_prime(13,0), (True, 13, 13))
+        self.assertEqual(p.is_symmetric_prime(5,2), (True, 3, 7))
+        self.assertEqual(p.is_symmetric_prime(4,1), (True, 3, 5))
+        self.assertEqual(p.is_symmetric_prime(10,1), (False, 0, 0))
+        self.assertEqual(p.is_symmetric_prime(12,0), (False, 0, 0))
+
+    def test_factorize(self):
+        p = primes.Primes(False)
+        self.assertEqual(p.factorize(3), [3])
+        self.assertEqual(p.factorize(5), [5])
+        self.assertEqual(p.factorize(6), [2,3])
+        self.assertEqual(p.factorize(20), [2,2,5])
     
 ################################################################################
 # Main - run unit tests
