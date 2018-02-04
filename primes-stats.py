@@ -30,6 +30,7 @@ import math
 import os
 import sys
 import primes
+import calculations
 
 #############################################################
 # Settings - configuration
@@ -113,6 +114,11 @@ k = 0
 def write_results_to_figures():
     area_primes = 100
     area_complex = 10
+    xmin_perc = 0
+    xmax_perc = 100
+    ymin_perc = 0
+    ymax_perc = 100
+    
     fig = plt.figure(1)
     plt.clf()
     plt.scatter(list_primes_last_digit[0], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
@@ -189,6 +195,9 @@ def write_results_to_figures():
 
     fig = plt.figure(11)
     plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
     plt.pcolor(array_primes_last_two_digits_2n_perc)
     fig.suptitle("color map - primes - last two digits x perc to next 2^n", fontsize=10)
     plt.savefig(file_output_fig11)
@@ -196,6 +205,9 @@ def write_results_to_figures():
 
     fig = plt.figure(12)
     plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
     plt.pcolor(array_complex_last_two_digits_2n_perc)
     fig.suptitle("color map - complex - last two digits x perc to next 2^n", fontsize=10)
     plt.savefig(file_output_fig12)
@@ -203,6 +215,9 @@ def write_results_to_figures():
 
     fig = plt.figure(13)
     plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
     plt.pcolor(array_all_last_two_digits_2n_perc)
     fig.suptitle("color map - all - last two digits x perc to next 2^n", fontsize=10)
     plt.savefig(file_output_fig13)
@@ -210,16 +225,13 @@ def write_results_to_figures():
 
     fig = plt.figure(14)
     plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
     plt.pcolor(array_primes_2n_3n_perc)
     fig.suptitle("color map - primes - perc to next 2^n x perc to next 3^n", fontsize=10)
     plt.savefig(file_output_fig14)
     plt.close(fig)
-
-def get_next_greater_power_of_two (n):
-    return 2**(n - 1).bit_length()
-
-def get_next_greater_power_of_three (n):
-    return 3**math.ceil(math.log(n,3))
 
 def update_color_maps (perc_2n, two_last_digits, is_prime):
     global array_primes_last_two_digits_2n, array_primes_last_two_digits_2n_perc, num_of_primes
@@ -254,6 +266,7 @@ def update_color_maps (perc_2n, two_last_digits, is_prime):
 
 print ("Initialize objects...")
 p = primes.Primes(caching_primality_results)
+c = calculations.Calculations()
 print ("DONE")
 print ("Loading helper sets...")
 p.init_set(file_input_primes, True)
@@ -280,8 +293,11 @@ for k in range (min_num, max_num):
     digits = int(math.log10(k))+1
     last_digit = k % 10
     two_last_digits = k % 100
-    perc_2n = int(k/get_next_greater_power_of_two(k)*100)
-    perc_3n = int(k/get_next_greater_power_of_three(k)*100)
+    next_2n = c.get_next_greater_power_of_two(k)
+    next_3n = c.get_next_greater_power_of_three(k)
+    
+    perc_2n = int((k - next_2n/2)/(next_2n - next_2n/2)*100)
+    perc_3n = int((k - next_3n/3)/(next_3n - next_3n/3)*100)
 
     num_of_all += 1
     if is_prime:

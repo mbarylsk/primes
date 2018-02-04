@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2017, Marcin Barylski
+# Copyright (c) 2016 - 2018, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -195,38 +195,6 @@ class Primes:
         if n > 1:
             f.append(int(n))
         return f
-
-    def calculate_3a_2b (self, n):
-        done = False
-        a = int(n/3)
-        b = 1
-        while not done:
-            remainder = n - 3*a
-            b = int(remainder / 2)
-            if b < 1:
-                a -= 1
-            if a < 1:
-                break
-            if a >= 1 and b >= 1:
-                done = True
-                break
-        return (a, b)
-
-    def calculate_2a_3b (self, n):
-        done = False
-        a = int(n/2)
-        b = 1
-        while not done:
-            remainder = n - 2*a
-            b = int(remainder / 3)
-            if b < 1:
-                a -= 1
-            if a < 1:
-                break
-            if a >= 1 and b >= 1:
-                done = True
-                break
-        return (a, b)
 
     def is_symmetric_prime (self, n, i):
         k1 = n - i

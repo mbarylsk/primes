@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2017, Marcin Barylski
+# Copyright (c) 2016 - 2018, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -26,6 +26,7 @@
 
 import unittest
 import primes
+import calculations
 
 ################################################################################
 # Unit tests
@@ -136,6 +137,23 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(p.factorize(5), [5])
         self.assertEqual(p.factorize(6), [2,3])
         self.assertEqual(p.factorize(20), [2,2,5])
+
+    def test_get_next_greater_power_of_two(self):
+        c = calculations.Calculations()
+        self.assertEqual(c.get_next_greater_power_of_two(2), 2)
+        self.assertEqual(c.get_next_greater_power_of_two(3), 4)
+        self.assertEqual(c.get_next_greater_power_of_two(4), 4)
+        self.assertEqual(c.get_next_greater_power_of_two(5), 8)
+        self.assertEqual(c.get_next_greater_power_of_two(6), 8)
+        self.assertEqual(c.get_next_greater_power_of_two(7), 8)
+        self.assertEqual(c.get_next_greater_power_of_two(250), 256)
+
+    def test_get_next_greater_power_of_three(self):
+        c = calculations.Calculations()
+        self.assertEqual(c.get_next_greater_power_of_three(2), 3)
+        self.assertEqual(c.get_next_greater_power_of_three(3), 3)
+        self.assertEqual(c.get_next_greater_power_of_three(4), 9)
+        self.assertEqual(c.get_next_greater_power_of_three(25), 27)
     
 ################################################################################
 # Main - run unit tests
