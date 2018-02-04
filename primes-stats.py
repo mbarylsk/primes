@@ -39,11 +39,11 @@ import calculations
 
 # Minimal and maximum number - range of iterations
 min_num = 2
-max_num = 10000000
+max_num = 10000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
-checkpoint_value = 10000
+checkpoint_value = 100
 
 # Caching previous primality results
 #   o True  - auxilary sets of primes and composite numbers will grow
@@ -68,20 +68,22 @@ directory = "results/" + str(max_num)
 if not os.path.exists(directory):
     os.makedirs(directory)
 file_output_extension = ".png"
-file_output_fig1 = directory + "/f_lastdigit_closeto2n" + file_output_extension
+file_output_fig1 = directory + "/f_lastdigit_closeto2n_all" + file_output_extension
 file_output_fig2 = directory + "/f_lastdigit_closeto2n_primes" + file_output_extension
 file_output_fig3 = directory + "/f_lastdigit_closeto2n_complex" + file_output_extension
-file_output_fig4 = directory + "/f_noofdigits_closeto2n" + file_output_extension
+file_output_fig4 = directory + "/f_noofdigits_closeto2n_all" + file_output_extension
 file_output_fig5 = directory + "/f_noofdigits_closeto2n_primes" + file_output_extension
 file_output_fig6 = directory + "/f_noofdigits_closeto2n_complex" + file_output_extension
-file_output_fig7 = directory + "/f_closeto2n_closeto3n" + file_output_extension
+file_output_fig7 = directory + "/f_closeto2n_closeto3n_all" + file_output_extension
 file_output_fig8 = directory + "/f_closeto2n_closeto3n_primes" + file_output_extension
 file_output_fig9 = directory + "/f_closeto2n_closeto3n_complex" + file_output_extension
-file_output_fig10 = directory + "/f_lasttwodigits_closeto2n" + file_output_extension
-file_output_fig11 = directory + "/f_colormap_primes_lasttwodigits_closeto2n" + file_output_extension
-file_output_fig12 = directory + "/f_colormap_complex_lasttwodigits_closeto2n" + file_output_extension
-file_output_fig13 = directory + "/f_colormap_all_lasttwodigits_closeto2n" + file_output_extension
-file_output_fig14 = directory + "/f_colormap_primes_closeto2n_closeto3n" + file_output_extension
+file_output_fig10 = directory + "/f_lasttwodigits_closeto2n_all" + file_output_extension
+file_output_fig11 = directory + "/f_colormap_lasttwodigits_closeto2n_primes" + file_output_extension
+file_output_fig12 = directory + "/f_colormap_lasttwodigits_closeto2n_complex" + file_output_extension
+file_output_fig13 = directory + "/f_colormap_lasttwodigits_closeto2n_all" + file_output_extension
+file_output_fig14 = directory + "/f_colormap_closeto2n_closeto3n_primes" + file_output_extension
+file_output_fig15 = directory + "/f_colormap_closeto2n_closeto3n_complex" + file_output_extension
+file_output_fig16 = directory + "/f_colormap_closeto2n_closeto3n_all" + file_output_extension
 
 #############################################################
 # Results of calculations
@@ -97,6 +99,10 @@ array_primes_last_two_digits_2n = np.zeros((101, 101))
 array_primes_last_two_digits_2n_perc = np.zeros((101, 101))
 array_primes_2n_3n = np.zeros((101, 101))
 array_primes_2n_3n_perc = np.zeros((101, 101))
+array_complex_2n_3n = np.zeros((101, 101))
+array_complex_2n_3n_perc = np.zeros((101, 101))
+array_all_2n_3n = np.zeros((101, 101))
+array_all_2n_3n_perc = np.zeros((101, 101))
 array_complex_last_two_digits_2n = np.zeros((101, 101))
 array_complex_last_two_digits_2n_perc = np.zeros((101, 101))
 array_all_last_two_digits_2n = np.zeros((101, 101))
@@ -245,32 +251,57 @@ def write_results_to_figures():
     plt.savefig(file_output_fig14)
     plt.close(fig)
 
+    fig = plt.figure(15)
+    plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
+    plt.pcolor(array_complex_2n_3n_perc)
+    fig.suptitle("color map - complex - perc to next 2^n x perc to next 3^n", fontsize=10)
+    plt.colorbar()
+    plt.savefig(file_output_fig15)
+    plt.close(fig)
+
+    fig = plt.figure(16)
+    plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
+    plt.pcolor(array_all_2n_3n_perc)
+    fig.suptitle("color map - all - perc to next 2^n x perc to next 3^n", fontsize=10)
+    plt.colorbar()
+    plt.savefig(file_output_fig16)
+    plt.close(fig)
+
 def update_color_maps (perc_2n, two_last_digits, is_prime):
     global array_primes_last_two_digits_2n, array_primes_last_two_digits_2n_perc, num_of_primes
     global array_complex_last_two_digits_2n, array_complex_last_two_digits_2n_perc, num_of_complex
     global array_all_last_two_digits_2n, array_all_last_two_digits_2n_perc, num_of_all
-    global array_primes_2n_3n, array_primes_2n_3n_perc
+    global array_primes_2n_3n, array_primes_2n_3n_perc, array_complex_2n_3n, array_complex_2n_3n_perc, array_all_2n_3n, array_all_2n_3n_perc
 
     if is_prime:
-        array_primes_last_two_digits_2n[perc_2n][two_last_digits] += 1 
+        array_primes_last_two_digits_2n[perc_2n][two_last_digits] += 1
+        array_primes_2n_3n [perc_2n][perc_3n] += 1
+        
         for i in range (0, 100):
             for j in range (0, 100):
                 array_primes_last_two_digits_2n_perc[i][j] = array_primes_last_two_digits_2n[i][j]/num_of_primes
-
-        array_primes_2n_3n [perc_2n][perc_3n] += 1 
-        for i in range (0, 100):
-            for j in range (0, 100):
                 array_primes_2n_3n_perc[i][j] = array_primes_2n_3n[i][j]/num_of_primes
     else:
-        array_complex_last_two_digits_2n[perc_2n][two_last_digits] += 1 
+        array_complex_last_two_digits_2n[perc_2n][two_last_digits] += 1
+        array_complex_2n_3n [perc_2n][perc_3n] += 1
+        
         for i in range (0, 100):
             for j in range (0, 100):
                 array_complex_last_two_digits_2n_perc[i][j] = array_complex_last_two_digits_2n[i][j]/num_of_complex
+                array_complex_2n_3n_perc[i][j] = array_complex_2n_3n[i][j]/num_of_complex
 
-    array_all_last_two_digits_2n[perc_2n][two_last_digits] += 1 
+    array_all_last_two_digits_2n[perc_2n][two_last_digits] += 1
+    array_all_2n_3n [perc_2n][perc_3n] += 1
     for i in range (0, 100):
         for j in range (0, 100):
             array_all_last_two_digits_2n_perc[i][j] = array_all_last_two_digits_2n[i][j]/num_of_all
+            array_all_2n_3n_perc[i][j] = array_all_2n_3n[i][j]/num_of_all
             
 #############################################################
 # Main
