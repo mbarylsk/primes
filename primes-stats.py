@@ -30,7 +30,6 @@ import math
 import os
 import sys
 import primes
-import math
 
 #############################################################
 # Settings - configuration
@@ -54,8 +53,8 @@ caching_primality_results = False
 # Helper files
 #   o file_input_primes - contains prime numbers
 #   o file_input_nonprimes - contains composite numbers
-file_input_primes = '..\\primes\\t_prime_numbers.txt'
-file_input_nonprimes = '..\\primes\\t_nonprime_numbers.txt'
+file_input_primes = 't_prime_numbers.txt'
+file_input_nonprimes = 't_nonprime_numbers.txt'
 
 continue_previous_calculations = False
 
