@@ -25,6 +25,7 @@
 #
 
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 import math
 import os
@@ -38,11 +39,11 @@ import calculations
 
 # Minimal and maximum number - range of iterations
 min_num = 2
-max_num = 1000000
+max_num = 10000000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
-checkpoint_value = 100000
+checkpoint_value = 10000
 
 # Caching previous primality results
 #   o True  - auxilary sets of primes and composite numbers will grow
@@ -118,12 +119,16 @@ def write_results_to_figures():
     xmax_perc = 100
     ymin_perc = 0
     ymax_perc = 100
+
+    red_patch = mpatches.Patch(color='red', label='primes')
+    blue_patch = mpatches.Patch(color='blue', label='complex')
     
     fig = plt.figure(1)
     plt.clf()
     plt.scatter(list_primes_last_digit[0], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
     plt.scatter(list_complex_last_digit[0], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
     fig.suptitle("last digit x perc to next 2^n", fontsize=10)
+    plt.legend(handles=[red_patch, blue_patch], loc='upper right', bbox_to_anchor=(1, 1), fontsize=6)
     plt.savefig(file_output_fig1)
     plt.close(fig)
 
@@ -146,6 +151,7 @@ def write_results_to_figures():
     plt.scatter(list_primes_no_of_digits, list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
     plt.scatter(list_complex_no_of_digits, list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
     fig.suptitle("no of digits x perc to next 2^n", fontsize=10)
+    plt.legend(handles=[red_patch, blue_patch], loc='upper right', bbox_to_anchor=(1, 1), fontsize=6)
     plt.savefig(file_output_fig4)
     plt.close(fig)
 
@@ -168,6 +174,7 @@ def write_results_to_figures():
     plt.scatter(list_primes_perc_of_next_milestone[0], list_primes_perc_of_next_milestone[1], s=area_primes, c='red', label='primes', alpha=0.2, edgecolors='none')
     plt.scatter(list_complex_perc_of_next_milestone[0], list_complex_perc_of_next_milestone[1], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
     fig.suptitle("perc to next 2^n x perc to next 3^n", fontsize=10)
+    plt.legend(handles=[red_patch, blue_patch], loc='upper right', bbox_to_anchor=(1, 1), fontsize=6)
     plt.savefig(file_output_fig7)
     plt.close(fig)
 
@@ -190,6 +197,7 @@ def write_results_to_figures():
     plt.scatter(list_primes_last_digit[1], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
     plt.scatter(list_complex_last_digit[1], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
     fig.suptitle("last two digits x perc to next 2^n", fontsize=10)
+    plt.legend(handles=[red_patch, blue_patch], loc='upper right', bbox_to_anchor=(1, 1), fontsize=6)
     plt.savefig(file_output_fig10)
     plt.close(fig)
 
@@ -200,6 +208,7 @@ def write_results_to_figures():
     axes.set_ylim([ymin_perc,ymax_perc])
     plt.pcolor(array_primes_last_two_digits_2n_perc)
     fig.suptitle("color map - primes - last two digits x perc to next 2^n", fontsize=10)
+    plt.colorbar()
     plt.savefig(file_output_fig11)
     plt.close(fig)
 
@@ -210,6 +219,7 @@ def write_results_to_figures():
     axes.set_ylim([ymin_perc,ymax_perc])
     plt.pcolor(array_complex_last_two_digits_2n_perc)
     fig.suptitle("color map - complex - last two digits x perc to next 2^n", fontsize=10)
+    plt.colorbar()
     plt.savefig(file_output_fig12)
     plt.close(fig)
 
@@ -220,6 +230,7 @@ def write_results_to_figures():
     axes.set_ylim([ymin_perc,ymax_perc])
     plt.pcolor(array_all_last_two_digits_2n_perc)
     fig.suptitle("color map - all - last two digits x perc to next 2^n", fontsize=10)
+    plt.colorbar()
     plt.savefig(file_output_fig13)
     plt.close(fig)
 
@@ -230,6 +241,7 @@ def write_results_to_figures():
     axes.set_ylim([ymin_perc,ymax_perc])
     plt.pcolor(array_primes_2n_3n_perc)
     fig.suptitle("color map - primes - perc to next 2^n x perc to next 3^n", fontsize=10)
+    plt.colorbar()
     plt.savefig(file_output_fig14)
     plt.close(fig)
 
