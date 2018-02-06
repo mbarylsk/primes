@@ -39,11 +39,11 @@ import calculations
 
 # Minimal and maximum number - range of iterations
 min_num = 2
-max_num = 10000
+max_num = 1000000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
-checkpoint_value = 100
+checkpoint_value = 10000
 
 # Caching previous primality results
 #   o True  - auxilary sets of primes and composite numbers will grow
@@ -273,7 +273,7 @@ def write_results_to_figures():
     plt.savefig(file_output_fig16)
     plt.close(fig)
 
-def update_color_maps (perc_2n, two_last_digits, is_prime):
+def update_color_maps (perc_2n, perc_3n, two_last_digits, is_prime):
     global array_primes_last_two_digits_2n, array_primes_last_two_digits_2n_perc, num_of_primes
     global array_complex_last_two_digits_2n, array_complex_last_two_digits_2n_perc, num_of_complex
     global array_all_last_two_digits_2n, array_all_last_two_digits_2n_perc, num_of_all
@@ -357,7 +357,7 @@ for k in range (min_num, max_num):
         list_complex_perc_of_next_milestone[0].append (perc_2n)
         list_complex_perc_of_next_milestone[1].append (perc_3n)
         num_of_complex += 1
-    update_color_maps (perc_2n, two_last_digits, is_prime)
+    update_color_maps (perc_2n, perc_3n, two_last_digits, is_prime)
 
     # checkpoint - partial results
     if (k - min_num) % checkpoint_value == 0:
