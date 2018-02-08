@@ -154,6 +154,31 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(c.get_next_greater_power_of_three(3), 3)
         self.assertEqual(c.get_next_greater_power_of_three(4), 9)
         self.assertEqual(c.get_next_greater_power_of_three(25), 27)
+
+    def test_get_number_of_dec_digits(self):
+        c = calculations.Calculations()
+        self.assertEqual(c.get_number_of_dec_digits(2), 1)
+        self.assertEqual(c.get_number_of_dec_digits(5), 1)
+        self.assertEqual(c.get_number_of_dec_digits(234), 3)
+        self.assertEqual(c.get_number_of_dec_digits(123456789), 9)
+
+    def test_get_last_dec_digit(self):
+        c = calculations.Calculations()
+        self.assertEqual(c.get_last_dec_digit(2), 2)
+        self.assertEqual(c.get_last_dec_digit(123), 3)
+        self.assertEqual(c.get_last_dec_digit(982917), 7)
+
+    def test_get_last_two_dec_digits(self):
+        c = calculations.Calculations()
+        self.assertEqual(c.get_last_two_dec_digits(2), 2)
+        self.assertEqual(c.get_last_two_dec_digits(123), 23)
+        self.assertEqual(c.get_last_two_dec_digits(982917), 17)
+
+    def test_get_first_two_dec_digits(self):
+        c = calculations.Calculations()
+        self.assertEqual(c.get_first_two_dec_digits(2), 2)
+        self.assertEqual(c.get_first_two_dec_digits(123), 12)
+        self.assertEqual(c.get_first_two_dec_digits(982917), 98)
     
 ################################################################################
 # Main - run unit tests

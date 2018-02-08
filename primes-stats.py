@@ -39,11 +39,11 @@ import calculations
 
 # Minimal and maximum number - range of iterations
 min_num = 2
-max_num = 1000000
+max_num = 10000000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
-checkpoint_value = 10000
+checkpoint_value = 100000
 
 # Caching previous primality results
 #   o True  - auxilary sets of primes and composite numbers will grow
@@ -84,19 +84,28 @@ file_output_fig13 = directory + "/f_colormap_lasttwodigits_closeto2n_all" + file
 file_output_fig14 = directory + "/f_colormap_closeto2n_closeto3n_primes" + file_output_extension
 file_output_fig15 = directory + "/f_colormap_closeto2n_closeto3n_complex" + file_output_extension
 file_output_fig16 = directory + "/f_colormap_closeto2n_closeto3n_all" + file_output_extension
+file_output_fig17 = directory + "/f_colormap_firsttwodigits_closeto2n_primes" + file_output_extension
+file_output_fig18 = directory + "/f_colormap_firsttwodigits_closeto2n_complex" + file_output_extension
+file_output_fig19 = directory + "/f_colormap_firsttwodigits_closeto2n_all" + file_output_extension
+file_output_fig20 = directory + "/f_firsttwodigits_closeto2n_all" + file_output_extension
+file_output_fig21 = directory + "/f_colormap_lasttwodigits_firsttwodigits_primes" + file_output_extension
+file_output_fig22 = directory + "/f_colormap_lasttwodigits_firsttwodigits_complex" + file_output_extension
+file_output_fig23 = directory + "/f_colormap_lasttwodigits_firsttwodigits_all" + file_output_extension
 
 #############################################################
 # Results of calculations
 #############################################################
 
-list_primes_no_of_digits = []
-list_primes_last_digit = [[],[]]
+list_primes_digits = [[],[],[],[]]
 list_primes_perc_of_next_milestone = [[],[]]
-list_complex_no_of_digits = []
-list_complex_last_digit = [[],[]]
+list_complex_digits = [[],[],[],[]]
 list_complex_perc_of_next_milestone = [[],[]]
 array_primes_last_two_digits_2n = np.zeros((101, 101))
 array_primes_last_two_digits_2n_perc = np.zeros((101, 101))
+array_primes_last_two_digits_first_two_digits = np.zeros((101, 101))
+array_primes_last_two_digits_first_two_digits_perc = np.zeros((101, 101))
+array_primes_first_two_digits_2n = np.zeros((101, 101))
+array_primes_first_two_digits_2n_perc = np.zeros((101, 101))
 array_primes_2n_3n = np.zeros((101, 101))
 array_primes_2n_3n_perc = np.zeros((101, 101))
 array_complex_2n_3n = np.zeros((101, 101))
@@ -105,8 +114,16 @@ array_all_2n_3n = np.zeros((101, 101))
 array_all_2n_3n_perc = np.zeros((101, 101))
 array_complex_last_two_digits_2n = np.zeros((101, 101))
 array_complex_last_two_digits_2n_perc = np.zeros((101, 101))
+array_complex_last_two_digits_first_two_digits = np.zeros((101, 101))
+array_complex_last_two_digits_first_two_digits_perc = np.zeros((101, 101))
+array_complex_first_two_digits_2n = np.zeros((101, 101))
+array_complex_first_two_digits_2n_perc = np.zeros((101, 101))
 array_all_last_two_digits_2n = np.zeros((101, 101))
 array_all_last_two_digits_2n_perc = np.zeros((101, 101))
+array_all_last_two_digits_first_two_digits = np.zeros((101, 101))
+array_all_last_two_digits_first_two_digits_perc = np.zeros((101, 101))
+array_all_first_two_digits_2n = np.zeros((101, 101))
+array_all_first_two_digits_2n_perc = np.zeros((101, 101))
 num_of_primes = 0
 num_of_complex = 0
 num_of_all = 0
@@ -131,8 +148,8 @@ def write_results_to_figures():
     
     fig = plt.figure(1)
     plt.clf()
-    plt.scatter(list_primes_last_digit[0], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
-    plt.scatter(list_complex_last_digit[0], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
+    plt.scatter(list_primes_digits[1], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
+    plt.scatter(list_complex_digits[1], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
     fig.suptitle("last digit x perc to next 2^n", fontsize=10)
     plt.legend(handles=[red_patch, blue_patch], loc='upper right', bbox_to_anchor=(1, 1), fontsize=6)
     plt.savefig(file_output_fig1)
@@ -140,22 +157,22 @@ def write_results_to_figures():
 
     fig = plt.figure(2)
     plt.clf()
-    plt.scatter(list_primes_last_digit[0], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
+    plt.scatter(list_primes_digits[1], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
     fig.suptitle("last digit x perc to next 2^n - primes only", fontsize=10)
     plt.savefig(file_output_fig2)
     plt.close(fig)
 
     fig = plt.figure(3)
     plt.clf()
-    plt.scatter(list_complex_last_digit[0], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
+    plt.scatter(list_complex_digits[1], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
     fig.suptitle("last digit x perc to next 2^n - complex only", fontsize=10)
     plt.savefig(file_output_fig3)
     plt.close(fig)
 
     fig = plt.figure(4)
     plt.clf()
-    plt.scatter(list_primes_no_of_digits, list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
-    plt.scatter(list_complex_no_of_digits, list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
+    plt.scatter(list_primes_digits[0], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
+    plt.scatter(list_complex_digits[0], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
     fig.suptitle("no of digits x perc to next 2^n", fontsize=10)
     plt.legend(handles=[red_patch, blue_patch], loc='upper right', bbox_to_anchor=(1, 1), fontsize=6)
     plt.savefig(file_output_fig4)
@@ -163,14 +180,14 @@ def write_results_to_figures():
 
     fig = plt.figure(5)
     plt.clf()
-    plt.scatter(list_primes_no_of_digits, list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
+    plt.scatter(list_primes_digits[0], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
     fig.suptitle("no of digits x perc to next 2^n - primes only", fontsize=10)
     plt.savefig(file_output_fig5)
     plt.close(fig)
 
     fig = plt.figure(6)
     plt.clf()
-    plt.scatter(list_complex_no_of_digits, list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
+    plt.scatter(list_complex_digits[0], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
     fig.suptitle("no of digits x perc to next 2^n - complex only", fontsize=10)
     plt.savefig(file_output_fig6)
     plt.close(fig)
@@ -200,8 +217,8 @@ def write_results_to_figures():
 
     fig = plt.figure(10)
     plt.clf()
-    plt.scatter(list_primes_last_digit[1], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
-    plt.scatter(list_complex_last_digit[1], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
+    plt.scatter(list_primes_digits [2], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
+    plt.scatter(list_complex_digits [2], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
     fig.suptitle("last two digits x perc to next 2^n", fontsize=10)
     plt.legend(handles=[red_patch, blue_patch], loc='upper right', bbox_to_anchor=(1, 1), fontsize=6)
     plt.savefig(file_output_fig10)
@@ -273,34 +290,125 @@ def write_results_to_figures():
     plt.savefig(file_output_fig16)
     plt.close(fig)
 
-def update_color_maps (perc_2n, perc_3n, two_last_digits, is_prime):
+    fig = plt.figure(17)
+    plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
+    plt.pcolor(array_primes_first_two_digits_2n_perc)
+    fig.suptitle("color map - primes - first two digits x perc to next 2^n", fontsize=10)
+    plt.colorbar()
+    plt.savefig(file_output_fig17)
+    plt.close(fig)
+
+    fig = plt.figure(18)
+    plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
+    plt.pcolor(array_complex_first_two_digits_2n_perc)
+    fig.suptitle("color map - complex - first two digits x perc to next 2^n", fontsize=10)
+    plt.colorbar()
+    plt.savefig(file_output_fig18)
+    plt.close(fig)
+
+    fig = plt.figure(19)
+    plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
+    plt.pcolor(array_all_first_two_digits_2n_perc)
+    fig.suptitle("color map - all - first two digits x perc to next 2^n", fontsize=10)
+    plt.colorbar()
+    plt.savefig(file_output_fig19)
+    plt.close(fig)
+
+    fig = plt.figure(20)
+    plt.clf()
+    plt.scatter(list_primes_digits [3], list_primes_perc_of_next_milestone[0], s=area_primes, c='red', label='prime', alpha=0.2, edgecolors='none')
+    plt.scatter(list_complex_digits [3], list_complex_perc_of_next_milestone[0], s=area_complex, c='blue', label='complex', alpha=0.2, edgecolors='none')
+    fig.suptitle("first two digits x perc to next 2^n", fontsize=10)
+    plt.legend(handles=[red_patch, blue_patch], loc='upper right', bbox_to_anchor=(1, 1), fontsize=6)
+    plt.savefig(file_output_fig20)
+    plt.close(fig)
+
+    fig = plt.figure(21)
+    plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
+    plt.pcolor(array_primes_last_two_digits_first_two_digits_perc)
+    fig.suptitle("color map - primes - last two digits x first two digits", fontsize=10)
+    plt.colorbar()
+    plt.savefig(file_output_fig21)
+    plt.close(fig)
+
+    fig = plt.figure(22)
+    plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
+    plt.pcolor(array_complex_last_two_digits_first_two_digits_perc)
+    fig.suptitle("color map - complex - last two digits x first two digits", fontsize=10)
+    plt.colorbar()
+    plt.savefig(file_output_fig22)
+    plt.close(fig)
+
+    fig = plt.figure(23)
+    plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc])
+    axes.set_ylim([ymin_perc,ymax_perc])
+    plt.pcolor(array_all_last_two_digits_first_two_digits_perc)
+    fig.suptitle("color map - all - last two digits x first two digits", fontsize=10)
+    plt.colorbar()
+    plt.savefig(file_output_fig23)
+    plt.close(fig)
+
+def update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, is_prime):
     global array_primes_last_two_digits_2n, array_primes_last_two_digits_2n_perc, num_of_primes
+    global array_primes_first_two_digits_2n, array_primes_first_two_digits_2n_perc
     global array_complex_last_two_digits_2n, array_complex_last_two_digits_2n_perc, num_of_complex
+    global array_complex_first_two_digits, array_complex_first_two_digits_2n_perc
     global array_all_last_two_digits_2n, array_all_last_two_digits_2n_perc, num_of_all
+    global array_all_first_two_digits_2n, array_all_first_two_digits_2n_perc
     global array_primes_2n_3n, array_primes_2n_3n_perc, array_complex_2n_3n, array_complex_2n_3n_perc, array_all_2n_3n, array_all_2n_3n_perc
 
     if is_prime:
         array_primes_last_two_digits_2n[perc_2n][two_last_digits] += 1
+        array_primes_first_two_digits_2n[perc_2n][two_first_digits] += 1
+        array_primes_last_two_digits_first_two_digits[two_first_digits][two_last_digits] += 1
         array_primes_2n_3n [perc_2n][perc_3n] += 1
         
         for i in range (0, 100):
             for j in range (0, 100):
                 array_primes_last_two_digits_2n_perc[i][j] = array_primes_last_two_digits_2n[i][j]/num_of_primes
+                array_primes_last_two_digits_first_two_digits_perc[i][j] = array_primes_last_two_digits_first_two_digits[i][j]/num_of_primes
+                array_primes_first_two_digits_2n_perc[i][j] = array_primes_first_two_digits_2n[i][j]/num_of_primes
                 array_primes_2n_3n_perc[i][j] = array_primes_2n_3n[i][j]/num_of_primes
     else:
         array_complex_last_two_digits_2n[perc_2n][two_last_digits] += 1
+        array_complex_last_two_digits_first_two_digits[two_first_digits][two_last_digits] += 1
+        array_complex_first_two_digits_2n[perc_2n][two_first_digits] += 1
         array_complex_2n_3n [perc_2n][perc_3n] += 1
         
         for i in range (0, 100):
             for j in range (0, 100):
                 array_complex_last_two_digits_2n_perc[i][j] = array_complex_last_two_digits_2n[i][j]/num_of_complex
+                array_complex_last_two_digits_first_two_digits_perc[i][j] = array_complex_last_two_digits_first_two_digits[i][j]/num_of_complex
+                array_complex_first_two_digits_2n_perc[i][j] = array_complex_first_two_digits_2n[i][j]/num_of_complex
                 array_complex_2n_3n_perc[i][j] = array_complex_2n_3n[i][j]/num_of_complex
 
     array_all_last_two_digits_2n[perc_2n][two_last_digits] += 1
+    array_all_last_two_digits_first_two_digits[two_first_digits][two_last_digits] += 1
+    array_all_first_two_digits_2n[perc_2n][two_first_digits] += 1
     array_all_2n_3n [perc_2n][perc_3n] += 1
+
     for i in range (0, 100):
         for j in range (0, 100):
             array_all_last_two_digits_2n_perc[i][j] = array_all_last_two_digits_2n[i][j]/num_of_all
+            array_all_first_two_digits_2n_perc[i][j] = array_all_first_two_digits_2n[i][j]/num_of_all
+            array_all_last_two_digits_first_two_digits_perc[i][j] = array_all_first_two_digits_2n[i][j]/num_of_all
             array_all_2n_3n_perc[i][j] = array_all_2n_3n[i][j]/num_of_all
             
 #############################################################
@@ -333,31 +441,35 @@ for k in range (min_num, max_num):
     is_prime = False
     if p.is_prime (k):
         is_prime = True
-    digits = int(math.log10(k))+1
-    last_digit = k % 10
-    two_last_digits = k % 100
-    next_2n = c.get_next_greater_power_of_two(k)
-    next_3n = c.get_next_greater_power_of_three(k)
+
+    digits = c.get_number_of_dec_digits (k)
+    last_digit = c.get_last_dec_digit (k)
+    two_last_digits = c.get_last_two_dec_digits (k)
+    two_first_digits = c.get_first_two_dec_digits (k)
+    next_2n = c.get_next_greater_power_of_two (k)
+    next_3n = c.get_next_greater_power_of_three (k)
     
     perc_2n = int((k - next_2n/2)/(next_2n - next_2n/2)*100)
     perc_3n = int((k - next_3n/3)/(next_3n - next_3n/3)*100)
 
     num_of_all += 1
     if is_prime:
-        list_primes_no_of_digits.append (digits)
-        list_primes_last_digit[0].append (last_digit)
-        list_primes_last_digit[1].append (two_last_digits)
+        list_primes_digits[0].append (digits)
+        list_primes_digits[1].append (last_digit)
+        list_primes_digits[2].append (two_last_digits)
+        list_primes_digits[3].append (two_first_digits)
         list_primes_perc_of_next_milestone[0].append (perc_2n)
         list_primes_perc_of_next_milestone[1].append (perc_3n)
         num_of_primes += 1
     else:
-        list_complex_no_of_digits.append (digits)
-        list_complex_last_digit[0].append (last_digit)
-        list_complex_last_digit[1].append (two_last_digits)
+        list_complex_digits[0].append (digits)
+        list_complex_digits[1].append (last_digit)
+        list_complex_digits[2].append (two_last_digits)
+        list_complex_digits[3].append (two_first_digits)
         list_complex_perc_of_next_milestone[0].append (perc_2n)
         list_complex_perc_of_next_milestone[1].append (perc_3n)
         num_of_complex += 1
-    update_color_maps (perc_2n, perc_3n, two_last_digits, is_prime)
+    update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, is_prime)
 
     # checkpoint - partial results
     if (k - min_num) % checkpoint_value == 0:

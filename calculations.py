@@ -33,10 +33,22 @@ import math
 class Calculations:
 
     def get_next_greater_power_of_two (self, n):
-        return 2**(n - 1).bit_length()
+        return (2**(n - 1).bit_length())
 
     def get_next_greater_power_of_three (self, n):
-        return 3**math.ceil(math.log(n,3))
+        return (3**math.ceil(math.log(n, 3)))
+
+    def get_number_of_dec_digits (self, n):
+        return (int(math.log10(n)) + 1)
+
+    def get_last_dec_digit (self, n):
+        return (n % 10)
+
+    def get_last_two_dec_digits (self, n):
+        return (n % 100)
+
+    def get_first_two_dec_digits (self, n):
+        return (int(str(n)[:2]))
 
     def calculate_3a_2b (self, n):
         done = False
