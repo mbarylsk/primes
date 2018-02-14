@@ -138,11 +138,11 @@ class Primes:
                 self.add_to_nonprime_set (n)
         return result
 
-    def is_smaller_twin_prime (self, n):
+    def is_lesser_twin_prime (self, n):
         if self.is_prime(n) and self.is_prime (n + 2):
             return True
 
-    def is_bigger_twin_prime (self, n):
+    def is_greater_twin_prime (self, n):
         if self.is_prime(n) and self.is_prime (n - 2):
             return True
 

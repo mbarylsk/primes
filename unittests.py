@@ -104,23 +104,23 @@ class TestMethods(unittest.TestCase):
         self.assertFalse(p.is_in_nonprime_set(3))
         self.assertFalse(p.is_in_nonprime_set(7))
 
-    def test_is_smaller_twin_prime(self):
+    def test_is_lesser_twin_prime(self):
         p = primes.Primes(False)
-        self.assertTrue(p.is_smaller_twin_prime(3))
-        self.assertTrue(p.is_smaller_twin_prime(5))
-        self.assertTrue(p.is_smaller_twin_prime(11))
-        self.assertFalse(p.is_smaller_twin_prime(13))
-        self.assertFalse(p.is_smaller_twin_prime(2))
-        self.assertFalse(p.is_smaller_twin_prime(9))
+        self.assertTrue(p.is_lesser_twin_prime(3))
+        self.assertTrue(p.is_lesser_twin_prime(5))
+        self.assertTrue(p.is_lesser_twin_prime(11))
+        self.assertFalse(p.is_lesser_twin_prime(13))
+        self.assertFalse(p.is_lesser_twin_prime(2))
+        self.assertFalse(p.is_lesser_twin_prime(9))
 
-    def test_is_bigger_twin_prime(self):
+    def test_is_greater_twin_prime(self):
         p = primes.Primes(False)
-        self.assertTrue(p.is_bigger_twin_prime(5))
-        self.assertTrue(p.is_bigger_twin_prime(7))
-        self.assertTrue(p.is_bigger_twin_prime(13))
-        self.assertFalse(p.is_bigger_twin_prime(11))
-        self.assertFalse(p.is_bigger_twin_prime(2))
-        self.assertFalse(p.is_bigger_twin_prime(9))
+        self.assertTrue(p.is_greater_twin_prime(5))
+        self.assertTrue(p.is_greater_twin_prime(7))
+        self.assertTrue(p.is_greater_twin_prime(13))
+        self.assertFalse(p.is_greater_twin_prime(11))
+        self.assertFalse(p.is_greater_twin_prime(2))
+        self.assertFalse(p.is_greater_twin_prime(9))
 
     def test_is_symmetric_prime(self):
         p = primes.Primes(False)

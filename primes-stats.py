@@ -39,11 +39,11 @@ import calculations
 
 # Minimal and maximum number - range of iterations
 min_num = 2
-max_num = 10000000
+max_num = 1000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
-checkpoint_value = 100000
+checkpoint_value = 100
 
 # Caching previous primality results
 #   o True  - auxilary sets of primes and composite numbers will grow
