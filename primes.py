@@ -53,10 +53,12 @@ kernel = SourceModule("""
 
 class Primes:
 
-    set_prime = set ()
-    set_nonprime = set ()
-    list_sorted_prime = []
-    list_sorted_nonprime = []
+    set_primes = set ()
+    set_twinprimes = set ()
+    set_nonprimes = set ()
+    list_sorted_primes = []
+    list_sorted_twinprimes = []
+    list_sorted_nonprimes = []
 
     # Caching previous primality results
     #   o True  - auxilary sets of primes and composite numbers will grow
@@ -68,7 +70,7 @@ class Primes:
     def __init__(self, cache_results):
         self.caching_primality_results = cache_results
 
-    def init_set (self, filename, is_prime):
+    def init_set (self, filename, number_type):
         if os.path.exists(filename):
             f = open(filename, "r")
             lines = f.readlines()
@@ -77,49 +79,66 @@ class Primes:
                 line = line.replace(']', '')
                 numbers = line.split(',')
                 for number in numbers:
-                    if is_prime:
-                        self.add_to_prime_set(int(number))
-                    else:
-                        self.add_to_nonprime_set(int(number))
+                    if number_type == 1:
+                        self.add_to_primes_set(int(number))
+                    elif number_type == 2:
+                        self.add_to_twinprimes_set(int(number))
+                    elif number_type == 3:
+                        self.add_to_nonprimes_set(int(number))
 
-    def get_list_sorted_prime (self):
+    def get_list_sorted_primes (self):
         return list_sorted_prime
 
-    def get_list_sorted_nonprime (self):
+    def get_list_sorted_twinprimes (self):
+        return list_sorted_twinprime
+
+    def get_list_sorted_nonprimes (self):
         return list_sorted_nonprime
 
-    def is_in_prime_set (self, n):
-        if n in self.set_prime:
+    def is_in_primes_set (self, n):
+        if n in self.set_primes:
             return True
         else:
             return False
 
-    def is_in_nonprime_set (self, n):
-        if n in self.set_nonprime:
+    def is_in_twinprimes_set (self, n):
+        if n in self.set_twinprimes:
             return True
         else:
             return False
 
-    def sort_prime_set (self):
-        self.list_sorted_prime = sorted (self.set_prime)
+    def is_in_nonprimes_set (self, n):
+        if n in self.set_nonprimes:
+            return True
+        else:
+            return False
 
-    def sort_nonprime_set (self):
-        self.list_nonsorted_prime = sorted (self.set_nonprime)
+    def sort_primes_set (self):
+        self.list_sorted_primes = sorted (self.set_primes)
 
-    def add_to_prime_set (self, n):
-        self.set_prime.add(n)
+    def sort_twinprimes_set (self):
+        self.list_sorted_twinprimes = sorted (self.set_twinprimes)
 
-    def add_to_nonprime_set (self, n):
-        self.set_nonprime.add(n)
+    def sort_nonprimes_set (self):
+        self.list_sorted_nonprimes = sorted (self.set_nonprimes)
+
+    def add_to_primes_set (self, n):
+        self.set_primes.add(n)
+
+    def add_to_twinprimes_set (self, n):
+        self.set_twinprimes.add(n)
+
+    def add_to_nonprimes_set (self, n):
+        self.set_nonprimes.add(n)
 
     def is_prime (self, n):
         if n == 1:
             return False
         elif n == 2 or n == 3:
             return True
-        elif self.is_in_prime_set (n):
+        elif self.is_in_primes_set (n):
             return True
-        elif self.is_in_nonprime_set (n):
+        elif self.is_in_nonprimes_set (n):
             return False
         elif n % 2 == 0 or n % 3 == 0:
             return False
@@ -133,9 +152,26 @@ class Primes:
 
         if self.caching_primality_results:
             if result:
-                self.add_to_prime_set (n)
+                self.add_to_primes_set (n)
             else:
-                self.add_to_nonprime_set (n)
+                self.add_to_nonprimes_set (n)
+        return result
+
+    def is_twinprime (self, n):
+        if self.is_in_twinprimes_set (n):
+            return True
+        elif self.is_in_nonprimes_set (n):
+            return False
+        elif self.is_lesser_twin_prime(n) or self.is_greater_twin_prime (n):
+            result = True
+        else:
+            result = False
+
+        if self.caching_primality_results:
+            if result:
+                self.add_to_twinprimes_set (n)
+            else:
+                self.add_to_nonprimes_set (n)
         return result
 
     def is_lesser_twin_prime (self, n):
@@ -177,7 +213,36 @@ class Primes:
         return True
 
     def get_ith_prime (self, i):
-        return self.list_sorted_prime[i]
+        max_known_index = len(self.list_sorted_primes)
+        if i < max_known_index:
+            return self.list_sorted_primes[i]
+        else:
+            if max_known_index == 0:
+                n = 2 # first prime
+            else:
+                n = self.list_sorted_primes[max_known_index]
+            primes_to_be_found = i - max_known_index
+            while primes_to_be_found > 0:
+                n += 1
+                if self.is_prime(n):
+                    primes_to_be_found -= 1
+        return n
+
+    def get_ith_twinprime (self, i):
+        max_known_index = len(self.list_sorted_twinprimes)
+        if i < max_known_index:
+            return self.list_sorted_twinprimes[i]
+        else:
+            if max_known_index == 0:
+                n = 3 # first twin prime
+            else:
+                n = self.list_sorted_twinprimes[max_known_index]
+            twinprimes_to_be_found = i - max_known_index
+            while twinprimes_to_be_found > 0:
+                n += 1
+                if self.is_twinprime(n):
+                    twinprimes_to_be_found -= 1
+        return n
 
     def factorize (self, n):
         if n <= 1:
