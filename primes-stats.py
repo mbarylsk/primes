@@ -39,11 +39,14 @@ import calculations
 
 # Minimal and maximum number - range of iterations
 min_num = 2
-max_num = 1000
+max_num = 100000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
-checkpoint_value = 100
+checkpoint_value = 1000
+
+# dimension of color map, must be positive
+base = 16
 
 # Caching previous primality results
 #   o True  - auxilary sets of primes and composite numbers will grow
@@ -91,6 +94,8 @@ file_output_fig20 = directory + "/f_firsttwodigits_closeto2n_all" + file_output_
 file_output_fig21 = directory + "/f_colormap_lasttwodigits_firsttwodigits_primes" + file_output_extension
 file_output_fig22 = directory + "/f_colormap_lasttwodigits_firsttwodigits_complex" + file_output_extension
 file_output_fig23 = directory + "/f_colormap_lasttwodigits_firsttwodigits_all" + file_output_extension
+file_output_fig24 = directory + "/f_colormap_primes" + file_output_extension
+file_output_fig25 = directory + "/f_colormap_complex" + file_output_extension
 
 #############################################################
 # Results of calculations
@@ -124,6 +129,8 @@ array_all_last_two_digits_first_two_digits = np.zeros((101, 101))
 array_all_last_two_digits_first_two_digits_perc = np.zeros((101, 101))
 array_all_first_two_digits_2n = np.zeros((101, 101))
 array_all_first_two_digits_2n_perc = np.zeros((101, 101))
+array_primes = np.zeros((base+1, base+1))
+array_complex = np.zeros((base+1, base+1))
 num_of_primes = 0
 num_of_complex = 0
 num_of_all = 0
@@ -136,12 +143,15 @@ k = 0
 #############################################################
 
 def write_results_to_figures():
+    global base
     area_primes = 100
     area_complex = 10
     xmin_perc = 0
     xmax_perc = 100
+    xmax_perc_small = base
     ymin_perc = 0
     ymax_perc = 100
+    ymax_perc_small = base
 
     red_patch = mpatches.Patch(color='red', label='primes')
     blue_patch = mpatches.Patch(color='blue', label='complex')
@@ -365,7 +375,29 @@ def write_results_to_figures():
     plt.savefig(file_output_fig23)
     plt.close(fig)
 
-def update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, is_prime):
+    fig = plt.figure(24)
+    plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc_small])
+    axes.set_ylim([ymin_perc,ymax_perc_small])
+    plt.pcolor(array_primes)
+    fig.suptitle("color map - primes - x, y", fontsize=10)
+    plt.colorbar()
+    plt.savefig(file_output_fig24)
+    plt.close(fig)
+
+    fig = plt.figure(25)
+    plt.clf()
+    axes = plt.gca()
+    axes.set_xlim([xmin_perc,xmax_perc_small])
+    axes.set_ylim([ymin_perc,ymax_perc_small])
+    plt.pcolor(array_complex)
+    fig.suptitle("color map - complex - x, y", fontsize=10)
+    plt.colorbar()
+    plt.savefig(file_output_fig25)
+    plt.close(fig)
+
+def update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, x, y, is_prime):
     global array_primes_last_two_digits_2n, array_primes_last_two_digits_2n_perc, num_of_primes
     global array_primes_first_two_digits_2n, array_primes_first_two_digits_2n_perc
     global array_complex_last_two_digits_2n, array_complex_last_two_digits_2n_perc, num_of_complex
@@ -373,12 +405,14 @@ def update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, is_p
     global array_all_last_two_digits_2n, array_all_last_two_digits_2n_perc, num_of_all
     global array_all_first_two_digits_2n, array_all_first_two_digits_2n_perc
     global array_primes_2n_3n, array_primes_2n_3n_perc, array_complex_2n_3n, array_complex_2n_3n_perc, array_all_2n_3n, array_all_2n_3n_perc
+    global array_primes, array_complex
 
     if is_prime:
         array_primes_last_two_digits_2n[perc_2n][two_last_digits] += 1
         array_primes_first_two_digits_2n[perc_2n][two_first_digits] += 1
         array_primes_last_two_digits_first_two_digits[two_first_digits][two_last_digits] += 1
         array_primes_2n_3n [perc_2n][perc_3n] += 1
+        array_primes [x][y] += 1
         
         for i in range (0, 100):
             for j in range (0, 100):
@@ -386,11 +420,17 @@ def update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, is_p
                 array_primes_last_two_digits_first_two_digits_perc[i][j] = array_primes_last_two_digits_first_two_digits[i][j]/num_of_primes
                 array_primes_first_two_digits_2n_perc[i][j] = array_primes_first_two_digits_2n[i][j]/num_of_primes
                 array_primes_2n_3n_perc[i][j] = array_primes_2n_3n[i][j]/num_of_primes
+
+        for i in range (0, base):
+            for j in range (0, base):
+                array_primes [i][j] += array_primes [i][j]/num_of_primes
+
     else:
         array_complex_last_two_digits_2n[perc_2n][two_last_digits] += 1
         array_complex_last_two_digits_first_two_digits[two_first_digits][two_last_digits] += 1
         array_complex_first_two_digits_2n[perc_2n][two_first_digits] += 1
         array_complex_2n_3n [perc_2n][perc_3n] += 1
+        array_complex [x][y] += 1
         
         for i in range (0, 100):
             for j in range (0, 100):
@@ -398,6 +438,10 @@ def update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, is_p
                 array_complex_last_two_digits_first_two_digits_perc[i][j] = array_complex_last_two_digits_first_two_digits[i][j]/num_of_complex
                 array_complex_first_two_digits_2n_perc[i][j] = array_complex_first_two_digits_2n[i][j]/num_of_complex
                 array_complex_2n_3n_perc[i][j] = array_complex_2n_3n[i][j]/num_of_complex
+
+        for i in range (0, base):
+            for j in range (0, base):
+                array_complex [i][j] += array_complex [i][j]/num_of_complex
 
     array_all_last_two_digits_2n[perc_2n][two_last_digits] += 1
     array_all_last_two_digits_first_two_digits[two_first_digits][two_last_digits] += 1
@@ -424,7 +468,7 @@ p.init_set(file_input_primes, True)
 p.init_set(file_input_nonprimes, False)
 print ("DONE")
 print ("Sorting primes...")
-p.sort_prime_set()
+p.sort_primes_set()
 print ("DONE")
 if continue_previous_calculations:
     print ("Restoring previous results...")
@@ -452,6 +496,9 @@ for k in range (min_num, max_num):
     perc_2n = int((k - next_2n/2)/(next_2n - next_2n/2)*100)
     perc_3n = int((k - next_3n/3)/(next_3n - next_3n/3)*100)
 
+    x = int (k / base) % base
+    y = k % base
+
     num_of_all += 1
     if is_prime:
         list_primes_digits[0].append (digits)
@@ -469,7 +516,7 @@ for k in range (min_num, max_num):
         list_complex_perc_of_next_milestone[0].append (perc_2n)
         list_complex_perc_of_next_milestone[1].append (perc_3n)
         num_of_complex += 1
-    update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, is_prime)
+    update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, x, y, is_prime)
 
     # checkpoint - partial results
     if (k - min_num) % checkpoint_value == 0:
