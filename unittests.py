@@ -170,6 +170,32 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(p.is_symmetric_prime(10,1), (False, 0, 0))
         self.assertEqual(p.is_symmetric_prime(12,0), (False, 0, 0))
 
+    def test_6km1(self):
+        p = primes.Primes(False)
+        self.assertEqual(p.is_6km1(5), True)
+        self.assertEqual(p.is_6km1(11), True)
+        self.assertEqual(p.is_6km1(17), True)
+
+    def test_6km1_neg(self):
+        p = primes.Primes(False)
+        self.assertEqual(p.is_6km1(2), False)
+        self.assertEqual(p.is_6km1(3), False)
+        self.assertEqual(p.is_6km1(7), False)
+        self.assertEqual(p.is_6km1(35), False)
+
+    def test_6kp1(self):
+        p = primes.Primes(False)
+        self.assertEqual(p.is_6kp1(7), True)
+        self.assertEqual(p.is_6kp1(13), True)
+        self.assertEqual(p.is_6kp1(19), True)
+
+    def test_6kp1_neg(self):
+        p = primes.Primes(False)
+        self.assertEqual(p.is_6km1(2), False)
+        self.assertEqual(p.is_6km1(3), False)
+        self.assertEqual(p.is_6kp1(5), False)
+        self.assertEqual(p.is_6kp1(25), False)
+
     def test_factorize(self):
         p = primes.Primes(False)
         self.assertEqual(p.factorize(3), [3])

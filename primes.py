@@ -268,3 +268,9 @@ class Primes:
             return (True, k1, k2)
         else:
             return (False, 0, 0)
+
+    def is_6km1 (self, n):
+        return (self.is_prime(n) and (n > 3) and (n % 6 == 5))
+
+    def is_6kp1 (self, n):
+        return (self.is_prime(n) and (n > 3) and (n % 6 == 1))
