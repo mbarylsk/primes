@@ -39,11 +39,11 @@ import calculations
 
 # Minimal and maximum number - range of iterations
 min_num = 2
-max_num = 100000
+max_num = 1000000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
-checkpoint_value = 1000
+checkpoint_value = 10000
 
 # dimension of color map, must be positive
 base = 16
@@ -96,13 +96,16 @@ file_output_fig22 = directory + "/f_colormap_lasttwodigits_firsttwodigits_comple
 file_output_fig23 = directory + "/f_colormap_lasttwodigits_firsttwodigits_all" + file_output_extension
 file_output_fig24 = directory + "/f_colormap_primes" + file_output_extension
 file_output_fig25 = directory + "/f_colormap_complex" + file_output_extension
+file_output_fig26 = directory + "/f_lessertwinprimes_ratio" + file_output_extension
 
 #############################################################
 # Results of calculations
 #############################################################
 
+list_checkpoints = []
 list_primes_digits = [[],[],[],[]]
 list_primes_perc_of_next_milestone = [[],[]]
+list_lesser_twin_primes_ratio = [[],[],[]]
 list_complex_digits = [[],[],[],[]]
 list_complex_perc_of_next_milestone = [[],[]]
 array_primes_last_two_digits_2n = np.zeros((101, 101))
@@ -132,6 +135,7 @@ array_all_first_two_digits_2n_perc = np.zeros((101, 101))
 array_primes = np.zeros((base+1, base+1))
 array_complex = np.zeros((base+1, base+1))
 num_of_primes = 0
+num_of_lesser_twin_primes = 0
 num_of_complex = 0
 num_of_all = 0
 
@@ -397,6 +401,23 @@ def write_results_to_figures():
     plt.savefig(file_output_fig25)
     plt.close(fig)
 
+    fig = plt.figure(26)
+    plt.clf()
+    r_patch = mpatches.Patch(color='red', label='lesser/primes')
+    g_patch = mpatches.Patch(color='green', label='lesser/complex')
+    b_patch = mpatches.Patch(color='blue', label='lesser/all')
+    list_of_handles = []
+    list_of_handles.append(r_patch)
+    list_of_handles.append(g_patch)
+    list_of_handles.append(b_patch)
+    plt.plot(list_checkpoints, list_lesser_twin_primes_ratio[0], 'r.', ms=2)
+    plt.plot(list_checkpoints, list_lesser_twin_primes_ratio[1], 'b.', ms=2)
+    plt.plot(list_checkpoints, list_lesser_twin_primes_ratio[2], 'g.', ms=2)
+    plt.legend(handles=list_of_handles, loc='upper right', bbox_to_anchor=(0.4, 0.8))
+    fig.suptitle("Lesser of twin primes vs. other numbers", fontsize=10)
+    plt.savefig(file_output_fig26)
+    plt.close(fig)
+
 def update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, x, y, is_prime):
     global array_primes_last_two_digits_2n, array_primes_last_two_digits_2n_perc, num_of_primes
     global array_primes_first_two_digits_2n, array_primes_first_two_digits_2n_perc
@@ -507,6 +528,8 @@ for k in range (min_num, max_num):
         list_primes_digits[3].append (two_first_digits)
         list_primes_perc_of_next_milestone[0].append (perc_2n)
         list_primes_perc_of_next_milestone[1].append (perc_3n)
+        if p.is_lesser_twin_prime (k):
+            num_of_lesser_twin_primes += 1
         num_of_primes += 1
     else:
         list_complex_digits[0].append (digits)
@@ -516,6 +539,24 @@ for k in range (min_num, max_num):
         list_complex_perc_of_next_milestone[0].append (perc_2n)
         list_complex_perc_of_next_milestone[1].append (perc_3n)
         num_of_complex += 1
+
+    list_checkpoints.append(k)
+    if num_of_primes > 0:
+        ratio1 = num_of_lesser_twin_primes/num_of_primes
+    else:
+        ratio1 = 0
+    if num_of_complex > 0:
+        ratio2 = num_of_lesser_twin_primes/num_of_complex
+    else:
+        ratio2 = 0
+    if num_of_all > 0: 
+        ratio3 = num_of_lesser_twin_primes/num_of_all
+    else:
+        ratio3 = 0
+    list_lesser_twin_primes_ratio[0].append(ratio1)
+    list_lesser_twin_primes_ratio[1].append(ratio2)
+    list_lesser_twin_primes_ratio[2].append(ratio3)
+        
     update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, x, y, is_prime)
 
     # checkpoint - partial results
@@ -527,7 +568,6 @@ for k in range (min_num, max_num):
         # save results collected so far
         write_results_to_figures ()
         k_current = k
-
 
 # final results
 perc_completed = str(int(k * 100 / max_num))
