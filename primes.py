@@ -54,6 +54,7 @@ kernel = SourceModule("""
 class Primes:
 
     set_primes = set ()
+    set_primes_to_be_excluded = set ()
     set_twinprimes = set ()
     set_nonprimes = set ()
     list_sorted_primes = []
@@ -101,6 +102,12 @@ class Primes:
         else:
             return False
 
+    def is_in_primes_set_to_be_excluded (self, n):
+        if n in self.set_primes_to_be_excluded:
+            return True
+        else:
+            return False
+
     def is_in_twinprimes_set (self, n):
         if n in self.set_twinprimes:
             return True
@@ -131,7 +138,12 @@ class Primes:
     def add_to_nonprimes_set (self, n):
         self.set_nonprimes.add(n)
 
+    def add_to_primes_set_to_be_excluded (self, n):
+        self.set_primes_to_be_excluded.add(n)
+
     def is_prime (self, n):
+        if self.is_in_primes_set_to_be_excluded (n):
+            return False
         if n == 1:
             return False
         elif n == 2 or n == 3:

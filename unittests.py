@@ -170,6 +170,20 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(p.is_symmetric_prime(10,1), (False, 0, 0))
         self.assertEqual(p.is_symmetric_prime(12,0), (False, 0, 0))
 
+    def test_set_primes_to_be_excluded(self):
+        p = primes.Primes(False)
+        p.add_to_primes_set(2)
+        p.add_to_primes_set(3)
+        p.add_to_primes_set(5)
+        p.add_to_primes_set(7)
+        self.assertTrue(p.is_prime (3))
+        self.assertTrue(p.is_prime (5))
+        self.assertTrue(p.is_prime (7))
+        p.add_to_primes_set_to_be_excluded (5)
+        self.assertTrue(p.is_prime (3))
+        self.assertFalse(p.is_prime (5))
+        self.assertTrue(p.is_prime (7))
+
     def test_6km1(self):
         p = primes.Primes(False)
         self.assertEqual(p.is_6km1(5), True)
