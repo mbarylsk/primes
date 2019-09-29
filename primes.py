@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2018, Marcin Barylski
+# Copyright (c) 2016 - 2019, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -255,6 +255,13 @@ class Primes:
                 if self.is_twinprime(n):
                     twinprimes_to_be_found -= 1
         return n
+ 
+    def get_all_primes_leq (self, n):
+        counter = 0
+        for i in range (n+1):
+            if self.is_prime(i):
+                counter += 1
+        return counter
 
     def factorize (self, n):
         if n <= 1:

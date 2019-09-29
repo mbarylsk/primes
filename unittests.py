@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2018, Marcin Barylski
+# Copyright (c) 2016 - 2019, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -66,6 +66,18 @@ class TestMethods(unittest.TestCase):
         self.assertFalse(p.is_prime_cuda(8))
         self.assertFalse(p.is_prime_cuda(10))
         self.assertFalse(p.is_prime_cuda(3379995))
+
+    def test_get_all_primes_leq (self):
+        p = primes.Primes(False)
+        p.add_to_primes_set(2)
+        p.add_to_primes_set(3)
+        p.add_to_primes_set(5)
+        p.add_to_primes_set(7)
+        p.sort_primes_set()
+        self.assertEqual(p.get_all_primes_leq(2), 1)
+        self.assertEqual(p.get_all_primes_leq(4), 2)
+        self.assertEqual(p.get_all_primes_leq(5), 3)
+        self.assertEqual(p.get_all_primes_leq(9), 4)
 
     def test_get_ith_prime(self):
         p = primes.Primes(False)
