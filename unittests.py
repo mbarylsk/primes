@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2019, Marcin Barylski
+# Copyright (c) 2016 - 2020, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -270,7 +270,46 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(c.get_first_two_dec_digits(2), 2)
         self.assertEqual(c.get_first_two_dec_digits(123), 12)
         self.assertEqual(c.get_first_two_dec_digits(982917), 98)
-    
+
+    def test_get_all_subnums(self):
+        c = calculations.Calculations()
+        self.assertEqual(c.get_all_subnums(123455, 1, True), [1, 2, 3, 4, 5, 5])
+        self.assertEqual(c.get_all_subnums(123455, 2, True), [12, 23, 34, 45, 55])
+        self.assertEqual(c.get_all_subnums(123455, 4, True), [1234, 2345, 3455])
+        self.assertEqual(c.get_all_subnums(123455, 6, True), [123455])
+        self.assertEqual(c.get_all_subnums(123455, 1, False), [1, 2, 3, 4, 5])
+        self.assertEqual(c.get_all_subnums(123455, 2, False), [12, 23, 34, 45])
+        self.assertEqual(c.get_all_subnums(123455, 4, False), [1234, 2345])
+        self.assertEqual(c.get_all_subnums(123455, 6, False), [])
+
+    def test_get_all_subnums_neg(self):
+        c = calculations.Calculations()
+        self.assertEqual(c.get_all_subnums(123455, 0, False), [])
+        self.assertEqual(c.get_all_subnums(123455, -1, False), [])
+        self.assertEqual(c.get_all_subnums(123455, 200, False), [])
+        self.assertEqual(c.get_all_subnums(123455, 0, True), [])
+        self.assertEqual(c.get_all_subnums(123455, -1, True), [])
+        self.assertEqual(c.get_all_subnums(123455, 200, True), [])
+
+    def test_get_avg_from_dict (self):
+        c = calculations.Calculations()
+        d1 = {10:1, 11:3, 12:2}
+        self.assertEqual(c.get_avg_from_dict(d1), 2)
+        d2 = {10:1, 11:2.5, 12:4}
+        self.assertEqual(c.get_avg_from_dict(d2), 2.5)
+        d3 = {10:1}
+        self.assertEqual(c.get_avg_from_dict(d3), 1)
+
+    def test_get_avg_from_dict_neg (self):
+        c = calculations.Calculations()
+        d1 = {}
+        try:
+            c.get_avg_from_dict(d1)
+        except ZeroDivisionError as err:
+            pass
+        else:
+            self.fail('ZeroDivisionError not raised')
+
 ################################################################################
 # Main - run unit tests
 ################################################################################

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018, Marcin Barylski
+# Copyright (c) 2018-2020, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -81,3 +81,34 @@ class Calculations:
                 done = True
                 break
         return (a, b)
+
+    def get_all_subnums (self, n, l, include_last):
+        s = str(n)
+        result_s = [s[i: j] for i in range(len(s)) 
+            for j in range(i + 1, len(s) + 1)]
+        result = []
+        for v in result_s:
+            if len(v) == l:
+                result.append (int(v))
+        if not include_last and len(result) > 0:
+            del result[-1]
+        return result
+
+    def get_avg_from_dict (self, d):
+        c = 0
+        s = 0
+        for k in d:
+            s += d[k]
+            c += 1
+        return (s/c)
+
+    def new_dict_from_avg (self, d):
+        nd = {}
+        try:
+            avg = self.get_avg_from_dict (d)
+        except:
+            avg = 1
+        for k in d:
+            nd[k] = d[k] - avg
+        return (nd)
+        
