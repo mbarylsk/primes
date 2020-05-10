@@ -69,6 +69,8 @@ file_output_fig3 = directory + "/f_three_digits_freq_primes" + file_output_exten
 file_output_fig4 = directory + "/f_three_digits_freq_composites" + file_output_extension
 file_output_fig5 = directory + "/f_two_digits_from_avg_freq_primes" + file_output_extension
 file_output_fig6 = directory + "/f_three_digits_from_avg_freq_primes" + file_output_extension
+file_output_fig7 = directory + "/f_two_digits_from_avg_freq_composites" + file_output_extension
+file_output_fig8 = directory + "/f_three_digits_from_avg_freq_composites" + file_output_extension
 
 #############################################################
 # Results of calculations
@@ -119,6 +121,8 @@ def calculate_metics (p, c, k, subnums2, subnums3):
 
     dict_frequency2_diff_from_avg = c.new_dict_from_avg(dict_frequency2)
     dict_frequency3_diff_from_avg = c.new_dict_from_avg(dict_frequency3)
+    dict_frequency2_diff_from_avg_comp = c.new_dict_from_avg(dict_frequency2_comp)
+    dict_frequency3_diff_from_avg_comp = c.new_dict_from_avg(dict_frequency3_comp)
     
 #############################################################
 # Presentation
@@ -132,6 +136,8 @@ def write_results_to_figures(g):
     g.graph_plot_bars_from_dict (dict_frequency3_comp, file_output_fig4)
     g.graph_plot_bars_from_dict (dict_frequency2_diff_from_avg, file_output_fig5)
     g.graph_plot_bars_from_dict (dict_frequency3_diff_from_avg, file_output_fig6)
+    g.graph_plot_bars_from_dict (dict_frequency2_diff_from_avg_comp, file_output_fig7)
+    g.graph_plot_bars_from_dict (dict_frequency3_diff_from_avg_comp, file_output_fig8)
     
 #############################################################
 # Main
