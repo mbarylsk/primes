@@ -33,6 +33,9 @@ sys.path.insert(0, '..\\primes\\')
 import primes
 sys.path.insert(0, '..\\goldbach-partition\\')
 import dataprocessing
+import numpy as np
+from scipy.optimize import curve_fit
+import scipy
 
 #############################################################
 # Settings - configuration
@@ -44,12 +47,14 @@ import dataprocessing
 #             be occupied
 #   o False - do not cache new primality test results
 caching_primality_results = False
-min_num = 0
-max_num = 50000
+min_num = 1
+max_num = 30000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
 checkpoint_value = 1000
+
+verbose = False
 
 file_input_primes = '..\\primes\\t_prime_numbers.txt'
 file_input_nonprimes = '..\\primes\\t_nonprime_numbers.txt'
@@ -72,7 +77,6 @@ list_nums = []
 list_marked_primes = []
 list_left_primes = []
 list_A333779_terms = []
-list_A333779_terms_avg = []
 
 def update_metrics (dp, k, a):
     global list_marked_primes, list_A333779_terms, list_A333779_terms_avg
@@ -84,22 +88,31 @@ def update_metrics (dp, k, a):
         list_marked_primes.append (a+k)
     
     list_A333779_terms.append (a)
-    list_A333779_terms_avg.append(dp.get_avg_value_from_list(list_A333779_terms))
+
+def func(x, a, b, c):
+    return a * (x ** b) + c
 
 #############################################################
 # Presentation
 #############################################################
 
-def write_results_to_figures():
+def write_results_to_figures(use_curve_fit):
 
-    red_patch = mpatches.Patch(color='red', label='avg')
+    red_patch = mpatches.Patch(color='red', label='fitted curve')
     blue_patch = mpatches.Patch(color='blue', label='term')
     
     fig = plt.figure(1)
     plt.clf()
-    plt.legend(handles=[blue_patch, red_patch], loc='upper left', bbox_to_anchor=(1, 1), fontsize=6)
+    plt.legend(handles=[blue_patch, red_patch], loc='upper left', fontsize=6)
     plt.plot(list_nums, list_A333779_terms, 'b-', ms=1)
-    plt.plot(list_nums, list_A333779_terms_avg, 'r-', ms=1)
+
+    if use_curve_fit:
+        x = np.asarray(list_nums, dtype=np.uint64)
+        y = np.asarray(list_A333779_terms, dtype=np.uint64)
+        popt, pcov = curve_fit(func, x, y)
+        plt.plot(x, func(x, *popt), 'r-')
+        print (popt)
+    
     plt.savefig(file_output_fig1)
     plt.close(fig)
     
@@ -151,7 +164,7 @@ for k in range (min_num, max_num, 1):
         print ("Checkpoint", k, "of total", max_num, "(" + perc_completed + "% completed)")
    
         # save results collected so far
-        write_results_to_figures ()
+        write_results_to_figures (False)
         k_current = k
       
 max_marked_prime = max(list_marked_primes)
@@ -170,15 +183,16 @@ list_marked_primes.sort()
 
 dt_end = datetime.now()
 
-# final results
-write_results_to_figures ()
+if verbose:
+    print ("Terms of A333779")
+    print (list_A333779_terms)
+    print ("Primes marked")
+    print (list_marked_primes)
+    print ("Primes left")
+    print (list_left_primes)
 
-print ("Terms of A333779")
-print (list_A333779_terms)
-print ("Primes marked")
-print (list_marked_primes)
-print ("Primes left")
-print (list_left_primes)
+# final results
+write_results_to_figures (True)
 
 dt_diff = dt_end - dt_start
 print ("Total calculations lasted:", dt_diff)
