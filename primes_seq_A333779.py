@@ -48,7 +48,7 @@ import scipy
 #   o False - do not cache new primality test results
 caching_primality_results = False
 min_num = 1
-max_num = 30000
+max_num = 40000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
@@ -89,8 +89,11 @@ def update_metrics (dp, k, a):
     
     list_A333779_terms.append (a)
 
-def func(x, a, b, c):
+def func_abc(x, a, b, c):
     return a * (x ** b) + c
+
+def func_ab(x, a, b):
+    return a * (x ** b)
 
 #############################################################
 # Presentation
@@ -103,14 +106,13 @@ def write_results_to_figures(use_curve_fit):
     
     fig = plt.figure(1)
     plt.clf()
-    plt.legend(handles=[blue_patch, red_patch], loc='upper left', fontsize=6)
     plt.plot(list_nums, list_A333779_terms, 'b-', ms=1)
 
     if use_curve_fit:
         x = np.asarray(list_nums, dtype=np.uint64)
         y = np.asarray(list_A333779_terms, dtype=np.uint64)
-        popt, pcov = curve_fit(func, x, y)
-        plt.plot(x, func(x, *popt), 'r-')
+        popt, pcov = curve_fit(func_ab, x, y)
+        plt.plot(x, func_ab(x, *popt), 'r-')
         print (popt)
     
     plt.savefig(file_output_fig1)
@@ -143,7 +145,6 @@ print ("---------------------------------------------------")
 dt_start = datetime.now()
 dt_current_previous = dt_start
 
-mysum = 0
 for k in range (min_num, max_num, 1):
 
     list_nums.append (k)
@@ -158,14 +159,13 @@ for k in range (min_num, max_num, 1):
         a += 1
 
     # checkpoint - partial results
-    if (k - min_num) % checkpoint_value == 0:
+    if k % checkpoint_value == 0 and (k - min_num) > 1:
 
         perc_completed = str(int(k * 100 / max_num))
         print ("Checkpoint", k, "of total", max_num, "(" + perc_completed + "% completed)")
    
         # save results collected so far
-        write_results_to_figures (False)
-        k_current = k
+        write_results_to_figures (True)
       
 max_marked_prime = max(list_marked_primes)
 all_checked = False
