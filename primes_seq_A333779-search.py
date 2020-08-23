@@ -53,9 +53,11 @@ import numpy as np
 #   o False - do not cache new primality test results
 caching_primality_results = False
 min_num = 1
-min_num = int(sys.argv[1])
+if len(sys.argv) > 1:
+    min_num = int(sys.argv[1])
 max_num = 1000
-max_num = int(sys.argv[2])
+if len(sys.argv) > 2:
+    max_num = int(sys.argv[2])
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
@@ -63,9 +65,11 @@ checkpoint_value =  int(max_num/1000)
 
 # option for formula calculating first candidate
 option_candidate = 3
-option_candidate = int(sys.argv[3])
-option_delta = 2
-option_delta = int(sys.argv[4])
+if len(sys.argv) > 3:
+    option_candidate = int(sys.argv[3])
+option_delta = 3
+if len(sys.argv) > 4:
+    option_delta = int(sys.argv[4])
 
 verbose = False
 verbose_figures = True
@@ -116,32 +120,36 @@ def calculate_candidate (m, option):
     elif option == 2:
         result = 10 * m
     elif option == 3:
-        a = 9
-        b = 1
+        a = 9.1
+        b = 1.1
         result = (int(a * (m ** b)) + m + 10)
     return result
 
 def calculate_delta (c, d, pk, option):
     delta = 0
     if option == 1:
-        delta += 1
+        delta = d + 1
     elif option == 2:
         if d == 0:
             delta = 1
         else:
             delta = (d + np.sign(d))*(-1)
     elif option == 3:
-        ld = c.get_last_dec_digit(pk)
+        ld = c.get_last_dec_digit(pk + d)
         if ld == 1:
-            delta = 2 # 3-1=2
+            delta = d + 2 # 3-1=2
         elif ld == 3:
-            delta = 4 # 7-3=4
+            delta = d + 4 # 7-3=4
         elif ld == 7:
-            delta =  2 # 9-7=2 
+            delta =  d + 2 # 9-7=2 
         elif ld == 9:
-            delta = 2 # 11-9=2
+            delta = d + 2 # 11-9=2
+        elif ld == 5:
+            delta = d + 2 # 7-5=2
+        elif ld == 4:
+            delta = d + 3 # 7-4=3
         else:
-            delta = 1
+            delta = d + 1 # all other cases: ld = 2, 6, 8, 0
 
     return delta
 
@@ -187,7 +195,7 @@ def write_results_to_figures():
     green_patch = mpatches.Patch(color='green', label='avg +')
     magenta_patch = mpatches.Patch(color='magenta', label='avg -')
     plt.legend(handles=[blue_patch, red_patch, green_patch, magenta_patch], loc='upper left', prop={'size': 6})
-    plt.plot(list_nums, list_when_prime_found, 'b-', ms=1)
+    plt.plot(list_nums, list_when_prime_found, 'b.', ms=1)
     plt.plot(list_nums, list_when_prime_found_avg, 'r-', ms=1)
     plt.plot(list_nums, list_when_prime_found_avg_deltaplus, 'g-', ms=1)
     plt.plot(list_nums, list_when_prime_found_avg_deltaminus, 'm-', ms=1)
@@ -199,7 +207,7 @@ def write_results_to_figures():
     blue_patch = mpatches.Patch(color='blue', label='value')
     red_patch = mpatches.Patch(color='red', label='avg')
     plt.legend(handles=[blue_patch, red_patch], loc='upper left', prop={'size': 6})
-    plt.plot(list_nums, list_when_prime_found_steps, 'b-', ms=1)
+    plt.plot(list_nums, list_when_prime_found_steps, 'b.', ms=1)
     plt.plot(list_nums, list_when_prime_found_steps_avg, 'r-', ms=1)
     plt.savefig(file_output_fig2)
     plt.close(fig)
@@ -250,16 +258,15 @@ for m in range (min_num, max_num, 1):
     found = False
     delta = 0
     steps = 0
-    pk = calculate_candidate (m, option_candidate)
+    pki = calculate_candidate (m, option_candidate)
     while not found:
         steps += 1
-        pk += delta
+        pk = pki + delta
         if p.is_prime (pk):
             found = True
+            update_metrics (dp, pk, delta, steps)
         else:
             delta = calculate_delta (c, delta, pk, option_delta)
-
-    update_metrics (dp, pk, delta, steps)
 
     # checkpoint - partial results
     if m % checkpoint_value == 0 and (m - min_num) > 1:

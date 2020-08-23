@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2019, Marcin Barylski
+# Copyright (c) 2016 - 2020, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -60,6 +60,7 @@ class Primes:
     list_sorted_primes = []
     list_sorted_twinprimes = []
     list_sorted_nonprimes = []
+    list_of_primes_used = []
 
     # Caching previous primality results
     #   o True  - auxilary sets of primes and composite numbers will grow
@@ -144,7 +145,7 @@ class Primes:
     def is_prime (self, n):
         if self.is_in_primes_set_to_be_excluded (n):
             return False
-        if n == 1:
+        if n < 2:
             return False
         elif n == 2 or n == 3:
             return True
@@ -293,3 +294,25 @@ class Primes:
 
     def is_6kp1 (self, n):
         return (self.is_prime(n) and (n > 3) and (n % 6 == 1))
+
+
+    def find_unique_prime_in_sum (self, n):
+        print ("d1", n, self.list_of_primes_used)
+        is_prime_lower_than_current_sum = True
+        k = 1
+        while (is_prime_lower_than_current_sum):
+            q = self.get_ith_prime (k)
+            print ("d2", q, k, self.list_of_primes_used)
+            if (2 <= n - q) and q not in self.list_of_primes_used:
+                print ("d3", n - q)
+                self.list_of_primes_used.append (q)
+                self.find_unique_prime_in_sum (n - q)
+            elif (2 <= n - q):
+                print ("d4", n - q)
+                k += 1
+            else:
+                print ("d4", q)
+                self.list_of_primes_used.append (q)
+                is_prime_lower_than_current_sum = False
+
+        print (n, self.list_of_primes_used)
