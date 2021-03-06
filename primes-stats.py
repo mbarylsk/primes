@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018, Marcin Barylski
+# Copyright (c) 2018-2021, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -39,11 +39,11 @@ import calculations
 
 # Minimal and maximum number - range of iterations
 min_num = 2
-max_num = 1000000
+max_num = 100000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
-checkpoint_value = 10000
+checkpoint_value = 1000
 
 # dimension of color map, must be positive
 base = 16
@@ -97,6 +97,7 @@ file_output_fig23 = directory + "/f_colormap_lasttwodigits_firsttwodigits_all" +
 file_output_fig24 = directory + "/f_colormap_primes" + file_output_extension
 file_output_fig25 = directory + "/f_colormap_complex" + file_output_extension
 file_output_fig26 = directory + "/f_lessertwinprimes_ratio" + file_output_extension
+file_output_fig27 = directory + "/f_prime_to_composite_ratio" + file_output_extension
 
 #############################################################
 # Results of calculations
@@ -108,6 +109,7 @@ list_primes_perc_of_next_milestone = [[],[]]
 list_lesser_twin_primes_ratio = [[],[],[]]
 list_complex_digits = [[],[],[],[]]
 list_complex_perc_of_next_milestone = [[],[]]
+list_prime_to_composite_ratio = [[],[],[],[]]
 array_primes_last_two_digits_2n = np.zeros((101, 101))
 array_primes_last_two_digits_2n_perc = np.zeros((101, 101))
 array_primes_last_two_digits_first_two_digits = np.zeros((101, 101))
@@ -413,9 +415,29 @@ def write_results_to_figures():
     plt.plot(list_checkpoints, list_lesser_twin_primes_ratio[0], 'r.', ms=2)
     plt.plot(list_checkpoints, list_lesser_twin_primes_ratio[1], 'b.', ms=2)
     plt.plot(list_checkpoints, list_lesser_twin_primes_ratio[2], 'g.', ms=2)
-    plt.legend(handles=list_of_handles, loc='upper right', bbox_to_anchor=(0.4, 0.8))
+    plt.legend(handles=list_of_handles, loc='upper right', bbox_to_anchor=(0.4, 0.8), fontsize=6)
     fig.suptitle("Lesser of twin primes vs. other numbers", fontsize=10)
     plt.savefig(file_output_fig26)
+    plt.close(fig)
+	
+    fig = plt.figure(27)
+    plt.clf()
+    r_patch = mpatches.Patch(color='red', label='p(i)/comp(i)')
+    b_patch = mpatches.Patch(color='blue', label='prime gap/next prime gap')
+    g_patch = mpatches.Patch(color='green', label='(p(i)+p(i+1))/comp(i)')
+    m_patch = mpatches.Patch(color='magenta', label='p(2i)/comp(i)')
+    list_of_handles = []
+    list_of_handles.append(r_patch)
+    list_of_handles.append(b_patch)
+    list_of_handles.append(g_patch)
+    list_of_handles.append(m_patch)
+    plt.plot(list_checkpoints, list_prime_to_composite_ratio[0], 'r.', ms=2)
+    plt.plot(list_checkpoints, list_prime_to_composite_ratio[1], 'b.', ms=1)
+    plt.plot(list_checkpoints, list_prime_to_composite_ratio[2], 'g.', ms=1)
+    plt.plot(list_checkpoints, list_prime_to_composite_ratio[3], 'm.', ms=1)
+    plt.legend(handles=list_of_handles, loc='upper right', bbox_to_anchor=(0.4, 0.9), fontsize=6)
+    fig.suptitle("Various ratio: primes to composite numbers", fontsize=10)
+    plt.savefig(file_output_fig27)
     plt.close(fig)
 
 def update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, x, y, is_prime):
@@ -556,7 +578,17 @@ for k in range (min_num, max_num):
     list_lesser_twin_primes_ratio[0].append(ratio1)
     list_lesser_twin_primes_ratio[1].append(ratio2)
     list_lesser_twin_primes_ratio[2].append(ratio3)
-        
+
+    ratio_next_prime_to_next_composite = p.get_ith_prime (k) / p.get_ith_composite (k)
+    ratio_prime_gap_to_next_gap = (p.get_ith_prime (k+1) - p.get_ith_prime (k)) / (p.get_ith_prime (k+2) - p.get_ith_prime (k+1))
+    ratio_two_next_primes_to_next_composite = (p.get_ith_prime (k) + p.get_ith_prime (k+1)) / p.get_ith_composite (k)
+    ratio_double_next_prime_to_next_composite = p.get_ith_prime (2*k) / p.get_ith_composite (k)
+
+    list_prime_to_composite_ratio[0].append (ratio_next_prime_to_next_composite)
+    list_prime_to_composite_ratio[1].append (ratio_prime_gap_to_next_gap)
+    list_prime_to_composite_ratio[2].append (ratio_two_next_primes_to_next_composite)
+    list_prime_to_composite_ratio[3].append (ratio_double_next_prime_to_next_composite)
+
     update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, x, y, is_prime)
 
     # checkpoint - partial results

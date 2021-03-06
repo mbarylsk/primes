@@ -256,6 +256,22 @@ class Primes:
                 if self.is_twinprime(n):
                     twinprimes_to_be_found -= 1
         return n
+
+    def get_ith_composite (self, i):
+        max_known_index = len(self.list_sorted_nonprimes)
+        if i < max_known_index:
+            return self.list_sorted_nonprimes[i]
+        else:
+            if max_known_index == 0:
+                n = 4 # first composite
+            else:
+                n = self.list_sorted_nonprimes[max_known_index]
+            composites_to_be_found = i - max_known_index
+            while composites_to_be_found > 0:
+                n += 1
+                if not self.is_prime(n):
+                    composites_to_be_found -= 1
+        return n
  
     def get_all_primes_leq (self, n):
         counter = 0

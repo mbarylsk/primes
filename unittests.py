@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2020, Marcin Barylski
+# Copyright (c) 2016-2021, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -128,6 +128,15 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(p.get_ith_twinprime(6), 19)
         self.assertEqual(p.get_ith_twinprime(7), 29)
         self.assertEqual(p.get_ith_twinprime(8), 31)
+
+    def test_get_ith_composite_ahead(self):
+        p = primes.Primes(False)
+        self.assertEqual(p.get_ith_composite(0), 4)
+        self.assertEqual(p.get_ith_composite(1), 6)
+        self.assertEqual(p.get_ith_composite(2), 8)
+        self.assertEqual(p.get_ith_composite(3), 9)
+        self.assertEqual(p.get_ith_composite(4), 10)
+        self.assertEqual(p.get_ith_composite(2), 8)
 
     def test_is_in_nonprime_set(self):
         p = primes.Primes(False)
