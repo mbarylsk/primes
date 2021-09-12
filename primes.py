@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2020, Marcin Barylski
+# Copyright (c) 2016 - 2021, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -233,7 +233,7 @@ class Primes:
             if max_known_index == 0:
                 n = 2 # first prime
             else:
-                n = self.list_sorted_primes[max_known_index]
+                n = self.list_sorted_primes[max_known_index-1]
             primes_to_be_found = i - max_known_index
             while primes_to_be_found > 0:
                 n += 1
@@ -249,7 +249,7 @@ class Primes:
             if max_known_index == 0:
                 n = 3 # first twin prime
             else:
-                n = self.list_sorted_twinprimes[max_known_index]
+                n = self.list_sorted_twinprimes[max_known_index-1]
             twinprimes_to_be_found = i - max_known_index
             while twinprimes_to_be_found > 0:
                 n += 1
@@ -265,7 +265,7 @@ class Primes:
             if max_known_index == 0:
                 n = 4 # first composite
             else:
-                n = self.list_sorted_nonprimes[max_known_index]
+                n = self.list_sorted_nonprimes[max_known_index-1]
             composites_to_be_found = i - max_known_index
             while composites_to_be_found > 0:
                 n += 1
