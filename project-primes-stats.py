@@ -98,6 +98,7 @@ file_output_fig24 = directory + "/f_colormap_primes" + file_output_extension
 file_output_fig25 = directory + "/f_colormap_complex" + file_output_extension
 file_output_fig26 = directory + "/f_lessertwinprimes_ratio" + file_output_extension
 file_output_fig27 = directory + "/f_prime_to_composite_ratio" + file_output_extension
+file_output_fig28 = directory + "/f_prime_to_composite" + file_output_extension
 
 #############################################################
 # Results of calculations
@@ -110,6 +111,7 @@ list_lesser_twin_primes_ratio = [[],[],[]]
 list_complex_digits = [[],[],[],[]]
 list_complex_perc_of_next_milestone = [[],[]]
 list_prime_to_composite_ratio = [[],[],[],[]]
+list_prime_to_composite = [[],[]]
 array_primes_last_two_digits_2n = np.zeros((101, 101))
 array_primes_last_two_digits_2n_perc = np.zeros((101, 101))
 array_primes_last_two_digits_first_two_digits = np.zeros((101, 101))
@@ -140,6 +142,8 @@ num_of_primes = 0
 num_of_lesser_twin_primes = 0
 num_of_complex = 0
 num_of_all = 0
+no_of_composite_between_primes = 0
+no_of_composite_between_primes_previous = 0
 
 k_current = 0
 k = 0
@@ -440,6 +444,20 @@ def write_results_to_figures():
     plt.savefig(file_output_fig27)
     plt.close(fig)
 
+    fig = plt.figure(28)
+    plt.clf()
+    r_patch = mpatches.Patch(color='red', label='comp between primes')
+    b_patch = mpatches.Patch(color='blue', label='delta between gaps')
+    list_of_handles = []
+    list_of_handles.append(r_patch)
+    list_of_handles.append(b_patch)
+    plt.plot(list_checkpoints, list_prime_to_composite[0], 'r.', ms=2)
+    plt.plot(list_checkpoints, list_prime_to_composite[1], 'b.', ms=1)
+    plt.legend(handles=list_of_handles, loc='upper right', bbox_to_anchor=(0.4, 0.9), fontsize=6)
+    fig.suptitle("Primes vs composite numbers - next stats", fontsize=10)
+    plt.savefig(file_output_fig28)
+    plt.close(fig)
+
 def update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, x, y, is_prime):
     global array_primes_last_two_digits_2n, array_primes_last_two_digits_2n_perc, num_of_primes
     global array_primes_first_two_digits_2n, array_primes_first_two_digits_2n_perc
@@ -588,6 +606,13 @@ for k in range (min_num, max_num):
     list_prime_to_composite_ratio[1].append (ratio_prime_gap_to_next_gap)
     list_prime_to_composite_ratio[2].append (ratio_two_next_primes_to_next_composite)
     list_prime_to_composite_ratio[3].append (ratio_double_next_prime_to_next_composite)
+
+    no_of_composite_between_primes_previous = no_of_composite_between_primes
+    no_of_composite_between_primes = p.get_ith_prime(k+1) - p.get_ith_prime(k) - 1
+    delta_gap = no_of_composite_between_primes - no_of_composite_between_primes_previous
+    
+    list_prime_to_composite[0].append (no_of_composite_between_primes)
+    list_prime_to_composite[1].append (delta_gap)
 
     update_color_maps (perc_2n, perc_3n, two_first_digits, two_last_digits, x, y, is_prime)
 
