@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2021, Marcin Barylski
+# Copyright (c) 2016 - 2024, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -27,6 +27,7 @@
 import unittest
 import primes
 import calculations
+import numpy as np
 
 ################################################################################
 # Unit tests
@@ -238,6 +239,27 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(p.factorize(6), [2,3])
         self.assertEqual(p.factorize(20), [2,2,5])
 
+    def test_factorize_to_pairs(self):
+        p = primes.Primes(False)
+        self.assertEqual(p.factorize_to_pairs(-1), [])
+        self.assertEqual(p.factorize_to_pairs(0), [])
+        self.assertEqual(p.factorize_to_pairs(1), [(1,1)])
+        self.assertEqual(p.factorize_to_pairs(2), [(1,2)])
+        self.assertEqual(p.factorize_to_pairs(3), [(1,3)])
+        self.assertEqual(p.factorize_to_pairs(4), [(1,4),(2,2)])
+        self.assertEqual(p.factorize_to_pairs(5), [(1,5)])
+        self.assertEqual(p.factorize_to_pairs(6), [(1,6),(2,3)])
+        self.assertEqual(p.factorize_to_pairs(20), [(1,20),(2,10),(4,5)])
+        self.assertEqual(p.factorize_to_pairs(24), [(1,24),(2,12),(3,8),(4,6)])
+        self.assertEqual(p.factorize_to_pairs(30), [(1,30),(2,15),(3,10),(5,6)])
+
+    #def test_get_islands_from_matrix(self):
+    #    c = calculations.Calculations()
+    #    m1 = np.zeros((2, 2))
+    #    self.assertEqual(c.get_islands_from_matrix(m1), [])
+    #    m2 = np.ones((2, 2))
+    #    self.assertEqual(c.get_islands_from_matrix(m2), [(0,0), (0,1), (1,0), (1,1)])
+
     def test_get_next_greater_power_of_two(self):
         c = calculations.Calculations()
         self.assertEqual(c.get_next_greater_power_of_two(2), 2)
@@ -299,6 +321,20 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(c.get_all_subnums(123455, 0, True), [])
         self.assertEqual(c.get_all_subnums(123455, -1, True), [])
         self.assertEqual(c.get_all_subnums(123455, 200, True), [])
+
+    def test_get_submatrix (self):
+        c = calculations.Calculations()
+        cols = 6
+        rows = int(cols/2)
+        m = np.zeros((rows, cols))
+        m[2][2]=1
+        r1 = c.get_submatrix(m, 1,2, 1,2)
+
+    def test_add_sets_as_lists (self):
+        c = calculations.Calculations()
+        self.assertEqual(c.add_sets_as_lists([(2,2)], [(2,3)]), [(2,3), (2,2)])
+        self.assertEqual(c.add_sets_as_lists([(2,2)], [(2,2)]), [(2,2)])
+        self.assertEqual(c.add_sets_as_lists([(2,2),(3,3)], [(2,2),(2,5)]), [(2,5),(2,2),(3,3)])
 
     def test_get_avg_from_dict (self):
         c = calculations.Calculations()

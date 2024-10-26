@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2021, Marcin Barylski
+# Copyright (c) 2016 - 2024, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -280,6 +280,7 @@ class Primes:
                 counter += 1
         return counter
 
+    # find all positive factors > 1 of n
     def factorize (self, n):
         if n <= 1:
             return 0
@@ -296,6 +297,28 @@ class Primes:
         if n > 1:
             f.append(int(n))
         return f
+
+    # factorize to all pairs (a, b), where a*b=n and a <= b
+    def factorize_to_pairs (self, n):
+        if n < 1:
+            return []
+        pairs = [(1, n)]
+        if n == 1:
+            return pairs
+        if self.is_prime (n):
+            return pairs
+        factors = self.factorize (n)
+        factors = [1] + factors
+        for f1 in factors:
+            for f2 in factors:
+                c1 = f1*f2
+                c2 = n/c1
+                if c2 == int (c2) and c1 <= c2:
+                    c2 = int (c2)
+                    new_pair = (c1, c2)
+                    if new_pair not in pairs:
+                        pairs.append (new_pair)
+        return pairs
 
     def is_symmetric_prime (self, n, i):
         k1 = n - i

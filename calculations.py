@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018-2020, Marcin Barylski
+# Copyright (c) 2018-2024, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -25,6 +25,7 @@
 # 
 
 import math
+import numpy as np
 
 #############################################################
 # Class
@@ -94,6 +95,60 @@ class Calculations:
             del result[-1]
         return result
 
+    def add_sets_as_lists (self, s1, s2):
+        new_set = set() 
+        for e1 in s1:
+            new_set.add(e1)
+        for e2 in s2:
+            new_set.add(e2)
+        new_list = list(new_set)
+        new_list.sort(key=lambda tup: tup[0])
+        return new_list
+
+    def get_submatrix (self, m, rs, re, cs, ce):
+        if rs < 0:
+            rs = 0
+        if cs < 0:
+            cs = 0
+        return m[rs:re, cs:ce]
+
+    # Checks 2D array m and count non-zero neigbours for each cell. Possible neighbours x for cell o:
+    #       x
+    #     x o x
+    #       x
+    # Returned array has the same dimensions as input array m
+    def get_neighbours (self, m):
+        (rows, cols) = m.shape
+        arr = np.zeros((rows, cols))
+        for i in range (0, rows):
+            for j in range (0, cols):
+                if m[i,j] > 0:
+                    if i-1 >= 0 and m[i-1,j] > 0:
+                        arr[i][j]+= 1
+                    if i+1 < cols and m[i+1,j] > 0:
+                        arr[i][j]+= 1
+                    if j-1 >= 0 and m[i,j-1] > 0:
+                        arr[i][j]+= 1
+                    if j+1 < rows and m[i,j+1] > 0:
+                        arr[i][j]+= 1
+        return arr
+
+    # TODO: under development
+    def get_islands_from_matrix (self, m):
+        new_list_of_sets = list()
+        (rows, cols) = m.shape
+
+        neigh = self.get_neighbours (m)
+
+        new_set = set ()
+        for i in range (0, rows):
+            for j in range (0, cols):
+                if neigh [i][j] == 4:
+                    nt = (i, j)
+                    new_set.add (nt)
+            
+        return new_list_of_sets
+
     def get_avg_from_dict (self, d):
         c = 0
         s = 0
@@ -101,7 +156,7 @@ class Calculations:
             s += d[k]
             c += 1
         return (s/c)
-
+    
     def new_dict_from_avg (self, d):
         nd = {}
         try:
