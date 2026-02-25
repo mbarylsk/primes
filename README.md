@@ -5,4 +5,4 @@ Collection of libraries and tools to experiment with various aspects of primes a
 * primes.py - library with key prime related methods
 * calculations.py - library with key calculations
 * unittests.py - unit tests for primes and calculations
-* /project - folders with specific projects
+* /projects - folders with specific projects
