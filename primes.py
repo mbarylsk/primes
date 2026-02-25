@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2024, Marcin Barylski
+# Copyright (c) 2016 - 2026, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -24,28 +24,32 @@
 # OF SUCH DAMAGE.
 # 
 
+# Set USE_CUDA environmental variable to test out CUDA related functions
+
 import math
 import os
 import numpy
-import pycuda.driver as cuda
-import pycuda.autoinit
-from pycuda.compiler import SourceModule
+if os.environ.get('USE_CUDA'):
+    import pycuda.driver as cuda
+    import pycuda.autoinit
+    from pycuda.compiler import SourceModule
 
 #############################################################
 # OpenCL kernels
 #############################################################
 
-kernel = SourceModule("""
-    __global__ void first_factor(long long n, int *value, int *primes){
-        int i = threadIdx.x;
-        int p = primes[i];
-        if(n % p == 0){
-            value[i] = p;
-        }else{
-            value[i] = 0;
+if os.environ.get('USE_CUDA'):
+    kernel = SourceModule("""
+        __global__ void first_factor(long long n, int *value, int *primes){
+            int i = threadIdx.x;
+            int p = primes[i];
+            if(n % p == 0){
+                value[i] = p;
+            }else{
+                value[i] = 0;
+            }
         }
-    }
-""")
+    """)
 
 #############################################################
 # Class
@@ -355,3 +359,17 @@ class Primes:
                 is_prime_lower_than_current_sum = False
 
         print (n, self.list_of_primes_used)
+
+    def get_abs_delta_to_closest_prime (self, n):
+        prime_found = False
+        delta = 0
+        while not prime_found:
+            if self.is_prime(n + delta):
+                prime_found = True
+                exit
+            if self.is_prime(n - delta):
+                prime_found = True
+                exit
+            if not prime_found:
+                delta += 1
+        return delta

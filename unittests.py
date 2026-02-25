@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 - 2024, Marcin Barylski
+# Copyright (c) 2016 - 2026, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -25,6 +25,7 @@
 # 
 
 import unittest
+import os
 import primes
 import calculations
 import numpy as np
@@ -32,6 +33,7 @@ import numpy as np
 ################################################################################
 # Unit tests
 ################################################################################
+# Set USE_CUDA environmental variable to test out CUDA related functions
 
 class TestMethods(unittest.TestCase):
     def test_isprime(self):
@@ -41,14 +43,16 @@ class TestMethods(unittest.TestCase):
         self.assertTrue(p.is_prime(5))
         self.assertTrue(p.is_prime(7))
         self.assertTrue(p.is_prime(11))
+        self.assertTrue(p.is_prime(907))
 
     def test_isprime_cuda(self):
-        p = primes.Primes(False)
-        self.assertTrue(p.is_prime_cuda(2))
-        self.assertTrue(p.is_prime_cuda(3))
-        self.assertTrue(p.is_prime_cuda(5))
-        self.assertTrue(p.is_prime_cuda(7))
-        self.assertTrue(p.is_prime_cuda(11))
+        if os.environ.get('USE_CUDA'):
+            p = primes.Primes(False)
+            self.assertTrue(p.is_prime_cuda(2))
+            self.assertTrue(p.is_prime_cuda(3))
+            self.assertTrue(p.is_prime_cuda(5))
+            self.assertTrue(p.is_prime_cuda(7))
+            self.assertTrue(p.is_prime_cuda(11))
 
     def test_isnotprime(self):
         p = primes.Primes(False)
@@ -60,13 +64,14 @@ class TestMethods(unittest.TestCase):
         self.assertFalse(p.is_prime(3379995))
 
     def test_isnotprime_cuda(self):
-        p = primes.Primes(False)
-        self.assertFalse(p.is_prime_cuda(1))
-        self.assertFalse(p.is_prime_cuda(4))
-        self.assertFalse(p.is_prime_cuda(6))
-        self.assertFalse(p.is_prime_cuda(8))
-        self.assertFalse(p.is_prime_cuda(10))
-        self.assertFalse(p.is_prime_cuda(3379995))
+        if os.environ.get('USE_CUDA'):
+            p = primes.Primes(False)
+            self.assertFalse(p.is_prime_cuda(1))
+            self.assertFalse(p.is_prime_cuda(4))
+            self.assertFalse(p.is_prime_cuda(6))
+            self.assertFalse(p.is_prime_cuda(8))
+            self.assertFalse(p.is_prime_cuda(10))
+            self.assertFalse(p.is_prime_cuda(3379995))
 
     def test_get_all_primes_leq (self):
         p = primes.Primes(False)
@@ -253,6 +258,21 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(p.factorize_to_pairs(24), [(1,24),(2,12),(3,8),(4,6)])
         self.assertEqual(p.factorize_to_pairs(30), [(1,30),(2,15),(3,10),(5,6)])
 
+    def test_get_abs_delta_to_closest_prime(self):
+        p = primes.Primes(False)
+        self.assertEqual(p.get_abs_delta_to_closest_prime(2), 0)
+        self.assertEqual(p.get_abs_delta_to_closest_prime(3), 0)
+        self.assertEqual(p.get_abs_delta_to_closest_prime(29), 0)
+        self.assertEqual(p.get_abs_delta_to_closest_prime(4), 1)
+        self.assertEqual(p.get_abs_delta_to_closest_prime(8), 1)
+        self.assertEqual(p.get_abs_delta_to_closest_prime(26), 3)
+
+    def test_get_abs_delta_to_closest_prime_neg(self):
+        p = primes.Primes(False)
+        self.assertEqual(p.get_abs_delta_to_closest_prime(1), 1)
+        self.assertEqual(p.get_abs_delta_to_closest_prime(0), 2)
+        self.assertEqual(p.get_abs_delta_to_closest_prime(-5), 7)
+
     #def test_get_islands_from_matrix(self):
     #    c = calculations.Calculations()
     #    m1 = np.zeros((2, 2))
@@ -354,6 +374,68 @@ class TestMethods(unittest.TestCase):
             pass
         else:
             self.fail('ZeroDivisionError not raised')
+
+    def test_trans_dict_int_to_lists_pos (self):
+        c = calculations.Calculations()
+        d1 = {0:1, 1:2, 2:5}
+        l1p1 = []
+        l2p1 = []
+        (l1p1, l2p1) = c.trans_dict_int_to_lists(d1)
+        self.assertEqual (l1p1, [0,1,2])
+        self.assertEqual (l2p1, [1,2,5])
+
+        d2 = {1:3, 0:8, 2:1}
+        l1p2 = []
+        l2p2 = []
+        (l1p2, l2p2) = c.trans_dict_int_to_lists(d2)
+        self.assertEqual (l1p2, [0,1,2])
+        self.assertEqual (l2p2, [8,3,1])
+
+        d3 = {4:3, 0:8, 2:1}
+        l1p3 = []
+        l2p3 = []
+        (l1p3, l2p3) = c.trans_dict_int_to_lists(d3)
+        self.assertEqual (l1p3, [0,1,2,3,4])
+        self.assertEqual (l2p3, [8,0,1,0,3])
+
+    def test_trans_dict_int_to_lists_neg (self):
+        c = calculations.Calculations()
+        d1 = {}
+        l1p1 = []
+        l2p1 = []
+        (l1p1, l2p1) = c.trans_dict_int_to_lists(d1)
+        self.assertEqual (l1p1, [0])
+        self.assertEqual (l2p1, [0])
+
+    def test_get_avg_from_list (self):
+        c = calculations.Calculations()
+        l1 = [1,2,3]
+        self.assertEqual (c.get_avg_from_list(l1), 2)
+
+        l2 = [4,2,3]
+        self.assertEqual (c.get_avg_from_list(l2), 3)
+
+        l3 = [0,1]
+        self.assertEqual (c.get_avg_from_list(l3), 0.5)
+
+        l4 = [-1,1]
+        self.assertEqual (c.get_avg_from_list(l4), 0)
+
+    def test_get_avg_from_list_neg (self):
+        c = calculations.Calculations()
+        l1 = []
+        with self.assertRaises(ValueError):
+            c.get_avg_from_list(l1)
+
+    def test_get_triangle_number (self):
+        c = calculations.Calculations()
+        self.assertEqual (c.get_triangle_number(0), 0)
+        self.assertEqual (c.get_triangle_number(1), 1)
+        self.assertEqual (c.get_triangle_number(2), 3)
+        self.assertEqual (c.get_triangle_number(3), 6)
+        self.assertEqual (c.get_triangle_number(4), 10)
+        self.assertEqual (c.get_triangle_number(5), 15)
+        self.assertEqual (c.get_triangle_number(6), 21)
 
 ################################################################################
 # Main - run unit tests

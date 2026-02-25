@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018-2024, Marcin Barylski
+# Copyright (c) 2018 - 2026, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -117,7 +117,7 @@ class Calculations:
     #     x o x
     #       x
     # Returned array has the same dimensions as input array m
-    def get_neighbours (self, m):
+    def get_matrix_of_neighbours (self, m):
         (rows, cols) = m.shape
         arr = np.zeros((rows, cols))
         for i in range (0, rows):
@@ -133,22 +133,6 @@ class Calculations:
                         arr[i][j]+= 1
         return arr
 
-    # TODO: under development
-    def get_islands_from_matrix (self, m):
-        new_list_of_sets = list()
-        (rows, cols) = m.shape
-
-        neigh = self.get_neighbours (m)
-
-        new_set = set ()
-        for i in range (0, rows):
-            for j in range (0, cols):
-                if neigh [i][j] == 4:
-                    nt = (i, j)
-                    new_set.add (nt)
-            
-        return new_list_of_sets
-
     def get_avg_from_dict (self, d):
         c = 0
         s = 0
@@ -156,6 +140,14 @@ class Calculations:
             s += d[k]
             c += 1
         return (s/c)
+    
+    def get_avg_from_list (self, l):
+        s = sum(l)
+        l = len(l)
+        if l > 0:
+            return (s/l)
+        else:
+            raise ValueError("Empty list")
     
     def new_dict_from_avg (self, d):
         nd = {}
@@ -167,3 +159,21 @@ class Calculations:
             nd[k] = d[k] - avg
         return (nd)
         
+    def trans_dict_int_to_lists (self, dictint):
+        max_key = 0
+        listk = []
+        listv = []
+
+        for key, value in dictint.items():
+            if key > max_key:
+                max_key = key
+        for i in range(0, max_key+1):
+            listk.append(i)
+            if i in dictint:
+                listv.append(dictint[i])
+            else:
+                listv.append(0)
+        return (listk, listv)
+
+    def get_triangle_number (self, n):
+        return (int(n * (n+1)/2))
