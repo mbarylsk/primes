@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018-2021, Marcin Barylski
+# Copyright (c) 2018-2026, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -30,6 +30,7 @@ import numpy as np
 import math
 import os
 import sys
+sys.path.insert(1, "..\\..")
 import primes
 import calculations
 
@@ -39,7 +40,7 @@ import calculations
 
 # Minimal and maximum number - range of iterations
 min_num = 2
-max_num = 100000
+max_num = 1000
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
@@ -60,8 +61,6 @@ caching_primality_results = False
 #   o file_input_nonprimes - contains composite numbers
 file_input_primes = 't_prime_numbers.txt'
 file_input_nonprimes = 't_nonprime_numbers.txt'
-
-continue_previous_calculations = False
 
 #############################################################
 # Settings - output directory and files
@@ -531,14 +530,6 @@ print ("DONE")
 print ("Sorting primes...")
 p.sort_primes_set()
 print ("DONE")
-if continue_previous_calculations:
-    print ("Restoring previous results...")
-    restore_previous_results (file_output_pickle)
-    if k_current > 0:
-        min_num = k_current
-        k = k_current
-        print ("Resuming calculations at", min_num)
-    print ("DONE")
 
 # new calculations
 for k in range (min_num, max_num):
