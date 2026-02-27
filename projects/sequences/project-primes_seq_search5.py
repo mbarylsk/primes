@@ -29,7 +29,7 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from datetime import datetime
-sys.path.insert(0, '..\\primes\\')
+sys.path.insert(1, "..\\..")
 import primes
 sys.path.insert(0, '..\\goldbach-partition\\')
 import dataprocessing
@@ -55,7 +55,7 @@ caching_primality_results = False
 min_num = 1
 if len(sys.argv) > 1:
     min_num = int(sys.argv[1])
-max_num = 100000
+max_num = 10000
 if len(sys.argv) > 2:
     max_num = int(sys.argv[2])
 
@@ -85,14 +85,19 @@ directory = "results/" + str(max_num)
 if not os.path.exists(directory):
     os.makedirs(directory)
 file_output_extension = ".png"
-file_output_fig1 = directory + "/f_values_psum_primes_not_used" + file_output_extension
+file_output_fig1 = directory + "/f_values_v1_v2" + file_output_extension
+file_output_fig2 = directory + "/f_values_v1_v2_perc" + file_output_extension
 
 #############################################################
 # Business logic
 #############################################################
 
 list_nums = []
-list_values = []
+list_values = [[],[]]
+total_v1_greater_than_v2 = 0
+total_v1_non_greater_than_v1 = 0
+total_v1_smaller_than_one = 0
+list_perc = [[],[],[]]
 
 #############################################################
 # Presentation
@@ -102,8 +107,17 @@ def write_results_to_figures():
 
     fig = plt.figure(1)
     plt.clf()
-    plt.plot(list_nums, list_values, 'b.', ms=1)
+    plt.plot(list_nums, list_values[0], 'b.', ms=1)
+    plt.plot(list_nums, list_values[1], 'r.', ms=1)
     plt.savefig(file_output_fig1)
+    plt.close(fig)
+
+    fig = plt.figure(2)
+    plt.clf()
+    plt.plot(list_nums, list_perc[0], 'b-', ms=1)
+    plt.plot(list_nums, list_perc[1], 'r-', ms=1)
+    plt.plot(list_nums, list_perc[2], 'g-', ms=1)
+    plt.savefig(file_output_fig2)
     plt.close(fig)
 
 #############################################################
@@ -134,22 +148,31 @@ print ("---------------------------------------------------")
 dt_start = datetime.now()
 dt_current_previous = dt_start
 
-sump = 2
+prime_greatest = 0
+avg = 0
 for m in range (min_num, max_num, 1):
 
     list_nums.append (m)
 
     p1 = p.get_ith_prime (m)
-    sump += p1
+    p2 = p.get_ith_prime (m+1)
+    p3 = p.get_ith_prime (m+2)
+    p4 = p.get_ith_prime (m+3)
 
-    counter = 0
-    for i in range (p1+1, sump):
-        if p.is_prime (i):
-            counter += 1
-            #print (i)
-            
-    list_values.append (counter)
-    #print (sump, counter)
+    v1 = (p1+p4)/(p2+p3)
+    v2 = (p1*p4)/(p2*p3)
+    if v1 <= v2:
+        #print ("v1 <= v2:", p1, p2, p3, p4, v1, v2)
+        total_v1_non_greater_than_v1 += 1
+    else:
+        total_v1_greater_than_v2 += 1
+    if v1 < 1:
+        total_v1_smaller_than_one += 1
+    list_values[0].append (v1)
+    list_values[1].append (v2)
+    list_perc[0].append (total_v1_greater_than_v2/m*100)
+    list_perc[1].append (total_v1_non_greater_than_v1/m*100)
+    list_perc[2].append (total_v1_smaller_than_one/m*100)
 
     if verbose_figures:
         write_results_to_figures ()
@@ -162,4 +185,4 @@ if verbose_figures:
 
 dt_diff = dt_end - dt_start
 print ("Total calculations lasted:", dt_diff)
-print_stats ()
+#print_stats ()
