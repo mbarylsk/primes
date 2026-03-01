@@ -175,5 +175,6 @@ class Calculations:
                 listv.append(0)
         return (listk, listv)
 
-    def get_triangle_number (self, n):
+    # Returns triangular number of index n
+    def get_triangular_number (self, n):
         return (int(n * (n+1)/2))

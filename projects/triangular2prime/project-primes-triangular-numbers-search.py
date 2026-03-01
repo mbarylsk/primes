@@ -167,7 +167,7 @@ print ("DONE")
 id = 0
 for k in range (min_num, max_num):
 
-    t = c.get_triangle_number (k)
+    t = c.get_triangular_number (k)
     n = random.randint(min_num, max_num)
     n6m1 = id*6-1
 

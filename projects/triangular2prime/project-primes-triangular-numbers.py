@@ -160,7 +160,7 @@ for k in range (min_num, max_num):
     list_triangle_index.append (triangle_number_index)
 
     # get proper triangle number
-    triangle_number = c.get_triangle_number (triangle_number_index)
+    triangle_number = c.get_triangular_number (triangle_number_index)
     list_triangle_value.append (triangle_number)
 
     # look for the closest prime

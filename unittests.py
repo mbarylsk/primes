@@ -26,9 +26,9 @@
 
 import unittest
 import os
+import numpy as np
 import primes
 import calculations
-import numpy as np
 
 ################################################################################
 # Unit tests
