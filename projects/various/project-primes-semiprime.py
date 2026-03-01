@@ -26,19 +26,20 @@
 
 import os
 import sys
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+sys.path.insert(0, '..\\primes\\')
 import primes
 import calculations
 import graphs
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 
 #############################################################
 # Settings - configuration
 #############################################################
 
 # Minimal and maximum number - range of iterations
-min_num = 0
-max_num = 100000
+min_num = 3
+max_num = 1000003
 
 # Checkpoint value when partial results are drawn/displayed
 # should be greater than zero
@@ -65,86 +66,48 @@ directory = "results/" + str(max_num)
 if not os.path.exists(directory):
     os.makedirs(directory)
 file_output_extension = ".png"
-file_output_fig1 = directory + "/f_prime_collatz_lenght_of_seq_3xp1" + file_output_extension
-file_output_fig2 = directory + "/f_prime_collatz_lenght_of_seq_3xp3" + file_output_extension
+file_output_fig1 = directory + "/f_prime_semiprime_diff" + file_output_extension
+file_output_fig2 = directory + "/f_prime_semiprime_perc" + file_output_extension
+file_output_fig3 = directory + "/f_prime_semiprime_sum" + file_output_extension
 
 #############################################################
 # Results of calculations
 #############################################################
 
-k = 0
-numbers_in_all_sequences_3xplus1 = set()
-numbers_in_all_sequences_3xplus3 = set()
-
-sequence_loop1_3xplus1= [2, 7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4]
-sequence_loop1_3xplus3= [3, 12, 6]
-
-list_init_nums = []
-list_number_of_terms_3xplus1 = []
-list_number_of_terms_3xplus3 = []
+list_nums = []
+list_diff = []
+list_sum = []
+list_percentage = [[],[]]
+count_all_nums = 0
+count_delta_ok = 0
+count_delta_below = 0
+current_sum = 0
 
 #############################################################
 # Business logic
 #############################################################
 
-def calculate_metics (p):
-    i = 0
-	
-def calculate_terms_3xplus1 (p, n_start):
-    global list_init_nums, list_number_of_terms_3xplus1, numbers_in_all_sequences_3xplus1, sequence_loop1_3xplus1
+def calculate_metrics (i, p1, p2, p3, p4):
+    global list_init_nums, list_delta, count_all_nums, count_delta_ok, count_delta_below, current_sum
 
-    completed = False
-    n = n_start
-    numbers_in_sequence = []
+    sp1 = p2*p3
+    sp2 = p1*p4
+    diff = sp1 - sp2
 
-    while (not completed):
-        numbers_in_sequence.append(n)
-        numbers_in_all_sequences_3xplus1.add (n)
-        if p.is_prime(n):
-            n = 3*n+1
-        else:
-            l = p.factorize (n)
-            l.sort()
-            f = l[0]
-            n = int(n/f)
-        if n in numbers_in_sequence:
-            completed = True
-    
-    print ("For n=", n_start, "we have:", numbers_in_sequence)
-	
-    list_number_of_terms_3xplus1.append(len(numbers_in_sequence))
+    current_sum += diff
 
-    for s in sequence_loop1_3xplus1:
-        if s not in numbers_in_sequence:
-            print ("--> New loop detected!")
+    if diff > 0:
+        count_delta_ok += 1
+    else:
+        count_delta_below += 1
+        
+    #print (p1, p2, p3, p4, sp1, sp2, diff)
 
-def calculate_terms_3xplus3 (p, n_start):
-    global list_init_nums, list_number_of_terms_3xplus1, numbers_in_all_sequences_3xplus1, sequence_loop1_3xplus1
-
-    completed = False
-    n = n_start
-    numbers_in_sequence = []
-
-    while (not completed):
-        numbers_in_sequence.append(n)
-        numbers_in_all_sequences_3xplus3.add (n)
-        if p.is_prime(n):
-            n = 3*n+3
-        else:
-            l = p.factorize (n)
-            l.sort()
-            f = l[0]
-            n = int(n/f)
-        if n in numbers_in_sequence:
-            completed = True
-    
-    print ("For n=", n_start, "we have:", numbers_in_sequence)
-	
-    list_number_of_terms_3xplus3.append(len(numbers_in_sequence))
-
-    for s in sequence_loop1_3xplus3:
-        if s not in numbers_in_sequence:
-            print ("--> New loop detected!")
+    list_nums.append (i)
+    list_diff.append (diff)
+    list_sum.append (current_sum)
+    list_percentage[0].append (100*count_delta_ok/count_all_nums)
+    list_percentage[1].append (100*count_delta_below/count_all_nums)
     
 #############################################################
 # Presentation
@@ -154,24 +117,38 @@ def write_results_to_figures():
 
     fig = plt.figure(1)
     plt.clf()
-    b_patch = mpatches.Patch(color='blue', label='lenght of seq till loop (3x+1)')
+    b_patch = mpatches.Patch(color='blue', label='diff sp1-sp2')
     list_of_handles = []
     list_of_handles.append(b_patch)
-    plt.plot(list_init_nums, list_number_of_terms_3xplus1, 'b.', ms=1)
+    plt.plot(list_nums, list_diff, 'b.', ms=1)
     plt.legend(handles=list_of_handles, loc='upper right', bbox_to_anchor=(0.4, 0.9), fontsize=6)
-    fig.suptitle("Lenght of sequences", fontsize=10)
+    fig.suptitle("Difference between semiprimes", fontsize=10)
     plt.savefig(file_output_fig1)
     plt.close(fig)
 
     fig = plt.figure(2)
     plt.clf()
-    b_patch = mpatches.Patch(color='blue', label='lenght of seq till loop (3x+3)')
+    g_patch = mpatches.Patch(color='green', label='% met')
+    r_patch = mpatches.Patch(color='red', label='% not met')
+    list_of_handles = []
+    list_of_handles.append(g_patch)
+    list_of_handles.append(r_patch)
+    plt.plot(list_nums, list_percentage[0], 'g.', ms=1)
+    plt.plot(list_nums, list_percentage[1], 'r.', ms=1)
+    plt.legend(handles=list_of_handles, loc='upper right', bbox_to_anchor=(0.4, 0.9), fontsize=6)
+    fig.suptitle("Correctness of hypothesis", fontsize=10)
+    plt.savefig(file_output_fig2)
+    plt.close(fig)
+
+    fig = plt.figure(3)
+    plt.clf()
+    b_patch = mpatches.Patch(color='blue', label='sum of diff sp1-sp2')
     list_of_handles = []
     list_of_handles.append(b_patch)
-    plt.plot(list_init_nums, list_number_of_terms_3xplus3, 'b.', ms=1)
+    plt.plot(list_nums, list_sum, 'b.', ms=1)
     plt.legend(handles=list_of_handles, loc='upper right', bbox_to_anchor=(0.4, 0.9), fontsize=6)
-    fig.suptitle("Lenght of sequences", fontsize=10)
-    plt.savefig(file_output_fig2)
+    fig.suptitle("Sum of differences between semiprimes", fontsize=10)
+    plt.savefig(file_output_fig3)
     plt.close(fig)
     
 #############################################################
@@ -180,8 +157,6 @@ def write_results_to_figures():
 
 print ("Initialize objects...")
 p = primes.Primes(caching_primality_results)
-c = calculations.Calculations()
-g = graphs.Graphs()
 print ("DONE")
 print ("Loading helper sets...")
 p.init_set(file_input_primes, True)
@@ -192,15 +167,30 @@ p.sort_primes_set()
 print ("DONE")
 
 # new calculations
+p1 = p.get_ith_prime (0)
+p2 = p.get_ith_prime (1)
+p3 = p.get_ith_prime (2)
 for k in range (min_num, max_num):
 
-    prime = p.get_ith_prime (k)
-    list_init_nums.append (prime)
+    count_all_nums += 1
+    p4 = p.get_ith_prime (k)
 
-    calculate_terms_3xplus1 (p, prime)
-    calculate_terms_3xplus3 (p, prime)
+    calculate_metrics (k, p1, p2, p3, p4)
+    
+    p1 = p2
+    p2 = p3
+    p3 = p4
+    p4 = 0
+
+    # checkpoint - partial results
+    if (k - min_num) % checkpoint_value == 0:
+
+        perc_completed = str(int(k * 100 / max_num))
+        print ("Checkpoint", k, "of total", max_num, "(" + perc_completed + "% completed)")
+   
+        # save results collected so far
+        write_results_to_figures ()
     	
 # final results
 
-print (numbers_in_all_sequences_3xplus1)
 write_results_to_figures ()

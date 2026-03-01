@@ -27,10 +27,11 @@
 import os
 import sys
 import numpy as np
-import primes
-import calculations
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+sys.path.insert(1, "..\\..")
+import primes
+import calculations
 
 #############################################################
 # Settings - configuration
@@ -159,7 +160,6 @@ for n1 in range (min_num, max_num):
 
         update_stats (n1, n2, p.is_prime (n1), p.is_prime (n2), i)
         
-    	
 # final results
 
 print_graphs ()

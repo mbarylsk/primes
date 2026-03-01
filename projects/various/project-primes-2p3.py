@@ -26,11 +26,12 @@
 
 import os
 import sys
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+sys.path.insert(0, '..\\primes\\')
 import primes
 import calculations
 import graphs
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 
 #############################################################
 # Settings - configuration

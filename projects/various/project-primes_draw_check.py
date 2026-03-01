@@ -29,12 +29,12 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from datetime import datetime
+import numpy as np
 sys.path.insert(0, '..\\primes\\')
 import primes
 sys.path.insert(0, '..\\goldbach-partition\\')
 import dataprocessing
 import calculations
-import numpy as np
 
 #############################################################
 # Syntax
