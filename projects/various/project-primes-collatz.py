@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021, Marcin Barylski
+# Copyright (c) 2021 - 2026, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -28,7 +28,7 @@ import os
 import sys
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-sys.path.insert(0, '..\\primes\\')
+sys.path.insert(1, '..\\..\\')
 import primes
 import calculations
 import graphs

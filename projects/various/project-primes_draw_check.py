@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024, Marcin Barylski
+# Copyright (c) 2024 - 2026, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from datetime import datetime
 import numpy as np
-sys.path.insert(0, '..\\primes\\')
+sys.path.insert(0, '..\\..\\')
 import primes
 sys.path.insert(0, '..\\goldbach-partition\\')
 import dataprocessing
@@ -169,7 +169,6 @@ for m in range (min_num, max_num, 1):
     #print (matrix_of_results)
 
     detect_lines (search_sequence_lenght, search_sequence_gap)
-
 
 plt.show()
 plt.savefig(file_output_fig1)
