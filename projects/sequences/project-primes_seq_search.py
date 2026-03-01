@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019 - 2020, Marcin Barylski
+# Copyright (c) 2019 - 2026, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -26,15 +26,15 @@
 
 import sys
 import os
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from datetime import datetime
-sys.path.insert(0, '..\\primes\\')
+sys.path.insert(1, "..\\..")
 import primes
 sys.path.insert(0, '..\\goldbach-partition\\')
 import dataprocessing
 import calculations
-import numpy as np
 
 #############################################################
 # Syntax

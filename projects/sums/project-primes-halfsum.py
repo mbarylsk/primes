@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022, Marcin Barylski
+# Copyright (c) 2022 - 2026, Marcin Barylski
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, 
@@ -26,10 +26,11 @@
 
 import os
 import sys
-import primes
-import calculations
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+sys.path.insert(1, "..\\..")
+import primes
+import calculations
 
 #############################################################
 # Settings - configuration
