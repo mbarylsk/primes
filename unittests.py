@@ -429,13 +429,13 @@ class TestMethods(unittest.TestCase):
 
     def test_get_triangle_number (self):
         c = calculations.Calculations()
-        self.assertEqual (c.get_triangle_number(0), 0)
-        self.assertEqual (c.get_triangle_number(1), 1)
-        self.assertEqual (c.get_triangle_number(2), 3)
-        self.assertEqual (c.get_triangle_number(3), 6)
-        self.assertEqual (c.get_triangle_number(4), 10)
-        self.assertEqual (c.get_triangle_number(5), 15)
-        self.assertEqual (c.get_triangle_number(6), 21)
+        self.assertEqual (c.get_triangular_number(0), 0)
+        self.assertEqual (c.get_triangular_number(1), 1)
+        self.assertEqual (c.get_triangular_number(2), 3)
+        self.assertEqual (c.get_triangular_number(3), 6)
+        self.assertEqual (c.get_triangular_number(4), 10)
+        self.assertEqual (c.get_triangular_number(5), 15)
+        self.assertEqual (c.get_triangular_number(6), 21)
 
 ################################################################################
 # Main - run unit tests
