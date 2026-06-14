@@ -61,7 +61,6 @@ file_input_primes = '..\\..\\t_prime_numbers.txt'
 file_input_nonprimes = '..\\..\\t_nonprime_numbers.txt'
 
 folder_results = "results/"
-file_output_pqr_sorted = folder_results + 'results_smallest_pqr_sorted.txt'
 
 #############################################################
 # Settings - output directory and files
@@ -73,6 +72,8 @@ if not os.path.exists(directory):
 file_output_extension = ".png"
 file_output_fig1 = directory + "/f_pq_min" + file_output_extension
 file_output_fig2 = directory + "/f_prime_to_pq_min" + file_output_extension
+
+file_output_pqr_sorted = folder_results + 'results_smallest_pqr_sorted.txt'
 
 #############################################################
 # Results of calculations
@@ -103,7 +104,6 @@ def calculate_metrics ():
 
     smallest_pqr_sorted = dict(sorted(smallest_pqr.items()))
     for mkey, mvalue in smallest_pqr_sorted.items():
-        print (mkey, mvalue, mkey/mvalue)
         list_prime_nums.append (mkey)
         list_min_pqr_nums.append (mvalue)
         list_ratio_prime_to_min_pqr.append (mkey/mvalue)
